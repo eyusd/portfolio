@@ -1,0 +1,80 @@
+{
+  "Metadata": {
+    "title": "Clément Chardine",
+    "description": "C'est moi"
+  },
+  "About": {
+    "code": "Au début de mon parcours, j’ai commencé à explorer le développement en créant de petits projets et j’ai rapidement été captivé par les possibilités infinies du code. Au fil des années, j’ai eu le privilège de travailler en tant qu’ingénieur logiciel, et finalement, j’ai cofondé <sniivelink>Sniive</sniivelink>, où j'ai occupé le poste de CTO, en développant des solutions pour faciliter le transfert de connaissances au sein des équipes. Auparavant, j’ai travaillé sur des projets innovants dans des entreprises comme <cedelink>CEDE Labs</cedelink> et <wanderlink>Wandercraft</wanderlink>, en visant toujours à concevoir des logiciels alliant robustesse et design intuitif.",
+    "other": "Aujourd'hui, je me concentre sur la création d'architectures élégantes qui améliorent l'expérience utilisateur tout en soutenant des applications complexes basées sur les données. Quand je ne suis pas plongé dans le code, je suis soit en train de faire ou d’écouter de la <spotilink>musique</spotilink>, de peaufiner mes playlists, ou d'explorer les dernières tendances en technologie et en IA."
+  },
+  "Identity": {
+    "title": "Ingénieur logiciel",
+    "location": "Paris, France",
+    "subtitle": "Je suis un ingénieur logiciel passionné par l'architecture logicielle et les idées innovantes"
+  },
+  "Navbar": {
+    "about": "À propos",
+    "experience": "Expérience",
+    "education": "Éducation"
+  },
+  "Experiences": {
+    "sniive": {
+      "name": "Cofondateur et CTO",
+      "time": {
+        "begin": "2024-04",
+        "end": "2024-11"
+      },
+      "children": "Expérience en entrepreneuriat, avec un focus sur la création d'une plateforme SaaS pour la documentation rapide des processus métier. J'ai dirigé le développement du produit depuis zéro, couvrant tous les aspects, y compris le frontend, le backend, et les services cloud.<h>Points techniques :</h><u><l>Utilisation intensive de GenAI (LLMs multimodaux) et des technologies de vision par IA</l><l>Développement full-stack pour une application web hébergée sur Vercel</l><l>Gestion de l'infrastructure cloud sur Azure, avec un accent sur l’architecture serverless et les microservices</l><l>Développement d'application desktop multiplateforme avec Rust et Tauri</l></u><h>Points business :</h><u><l>Orienté B2B, avec plus de 2K$ sécurisés en préventes</l><l>Approche de développement itératif axée sur les retours clients</l><l>Incubé à STATION F, le plus grand campus de startups au monde</l><l>Soutenu par CentraleSupélec et des entrepreneurs français de premier plan</l></u>"
+    },
+    "cede": {
+      "name": "Développeur Fullstack",
+      "time": {
+        "begin": "2023-03",
+        "end": "2024-08"
+      },
+      "children": "Travail sur le développement d'une plateforme SaaS et d'une extension Chrome pour la gestion des actifs numériques, sur des réseaux centralisés et décentralisés.<h>Responsabilités principales :</h><u><l>Refactorisation approfondie de la logique métier de l'extension pour une meilleure performance et une expérience développeur optimisée</l><l>Création d'une API pour la plateforme, désormais packagée en tant que SDK pour les développeurs tiers</l><l>Projet de R&D sur une application mobile native pour la plateforme</l></u>"
+    },
+    "wandercraft": {
+      "name": "Développeur logiciel",
+      "time": {
+        "begin": "2022-09",
+        "end": "2023-02"
+      },
+      "children": "Développement d'un outil pour surveiller et diagnostiquer les problèmes de l'exosquelette. L'application était utilisée par les équipes de maintenance et les ingénieurs, tant à distance que sur site.<s></s>L'outil utilisait le protocole EtherCAT pour communiquer avec l'exosquelette, en se concentrant sur l'analyse d'un système complexe et potentiellement défectueux."
+    }
+  },
+  "Educations": {
+    "centralesupelec": {
+      "name": "Diplôme d'ingénieur",
+      "time": {
+        "begin": "2020-09",
+        "end": "2024-04"
+      },
+      "children": "Diplômé avec une spécialisation en Architecture et Ingénierie Logicielle à CentraleSupélec (2e meilleure école d’ingénieurs en France).<s></s>Cursus additionnel en entrepreneuriat durant la dernière année.<h>Cours principaux :</h><u><l>Ingénierie logicielle et algorithmes</l><l>Infrastructures système et réseau</l><l>Architectures applicatives</l><l>Économie et gestion des SI</l><l>Transformation stratégique des SI</l></u><h>Autres cours :</h><u><l>Design</l><l>Économie</l><l>Ingénierie des données</l><l>Mathématiques et statistiques</l><l>Électronique et physique</l></u>"
+    },
+    "kaist": {
+      "name": "Semestre à l'étranger",
+      "time": {
+        "begin": "2022-01",
+        "end": "2022-07"
+      },
+      "children": "Un semestre à l'étranger à 한국과학기술원 🇰🇷 (meilleure université sud-coréenne) dans le département d’ingénierie mécanique.<h>Cours :</h><u><l>Apprentissage automatique pour la robotique</l><l>Théorie du codage</l><l>Dynamique des robots</l><l>Méthodologie Lean Startup</l></u>"
+    },
+    "sorbonne": {
+      "name": "Licence en Philosophie",
+      "time": {
+        "begin": "2020-09",
+        "end": "2021-06"
+      },
+      "children": "Cours de L3 en philosophie à l’Université Paris-Sorbonne (Paris IV) durant la première année de mes études d’ingénieur.<h>Sujets :</h><u><l>Logique</l><l>Éthique</l><l>Philosophie politique</l><l>Métaphysique</l><l>Philosophie du langage</l><l>Philosophie indienne</l></u>"
+    },
+    "prepa": {
+      "name": "Classes préparatoires",
+      "time": {
+        "begin": "2018-09",
+        "end": "2020-06"
+      },
+      "children": "Classes préparatoires en Mathématiques, Physique et Sciences de l'Ingénieur (MPSI/MP*) au Lycée Pierre Corneille à Rouen"
+    }
+  }
+}

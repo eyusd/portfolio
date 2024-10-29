@@ -1,0 +1,80 @@
+{
+  "Metadata": {
+    "title": "Clément Chardine",
+    "description": "That's me!"
+  },
+  "About": {
+    "code": "Back in my early days, I started exploring development by creating small projects and quickly became captivated by the endless possibilities of coding. Over the years, I’ve had the privilege to work as a software engineer, and eventually, I co-founded <sniivelink>Sniive</sniivelink>, where I served as CTO, developing solutions to streamline knowledge transfer in teams. Previously, I've worked on innovative projects at places like <cedelink>CEDE Labs</cedelink> and <wanderlink>Wandercraft</wanderlink>, always aiming to build software that merges robust functionality with intuitive design.",
+    "other": "My focus today is on crafting elegant architectures that enhance user experience while supporting complex data-driven applications. When I'm not deep in code, I'm either making or listening to <spotilink>music</spotilink>, refining my playlists, or exploring the latest trends in tech and AI."
+  },
+  "Identity": {
+    "title": "Software Engineer",
+    "location": "Paris, France",
+    "subtitle": "I am a software engineer with a passion for software architecture and innovative ideas"
+  },
+  "Navbar": {
+    "about": "About",
+    "experience": "Experience",
+    "education": "Education"
+  },
+  "Experiences": {
+    "sniive": {
+      "name": "Cofounder & CTO",
+      "time": {
+        "begin": "2024-04",
+        "end": "2024-11"
+      },
+      "children": "Experience in entrepreneurship, focused on creating a SaaS platform for rapid business process documentation. Led the product development from the ground up, covering all aspects including frontend, backend, and cloud services.<h>Tech highlights:</h><u><l>Extensive use of GenAI (multimodal LLMs) and AI Vision technologies</l><l>Full-stack development for a web application hosted on Vercel</l><l>Cloud infrastructure management on Azure, emphasizing serverless architecture and microservices</l><l>Cross-platform desktop application development using Rust and Tauri</l></u><h>Business highlights:</h><u><l>B2B-focused, with +2K$ secured in pre-sales</l><l>Iterative development approach with a focus on customer feedback</l><l>Incubated at STATION F, the world's largest startup campus</l><l>Backed by CentraleSupélec and top French entrepreneurs</l></u>"
+    },
+    "cede": {
+      "name": "Fullstack Developer",
+      "time": {
+        "begin": "2023-03",
+        "end": "2024-08"
+      },
+      "children": "Worked on the development of a SaaS platform and a Chrome extension for the management of digital assets, both on centralized and decentralized networks.<h>Main responsibilities:</h><u><l>In-depth refactoring of the business logic of the extension for better performance and optimized developer experience</l><l>Building an API for the platform, now packaged as an SDK for third-party developers</l><l>R&D project on a native mobile application for the platform</l></u>"
+    },
+    "wandercraft": {
+      "name": "Software Developer",
+      "time": {
+        "begin": "2022-09",
+        "end": "2023-02"
+      },
+      "children": "Developed a tool to monitor and diagnose issues with the exoskeleton. The application was used by maintenance teams and engineers, for both remote and on-site support.<s></s>The tool leveraged the EtherCAT protocol to communicate with the exoskeleton, and was focused on gaining insights from a complex and possibly faulty system."
+    }
+  },
+  "Educations": {
+    "centralesupelec": {
+      "name": "Master's Degree in Engineering",
+      "time": {
+        "begin": "2020-09",
+        "end": "2024-04"
+      },
+      "children": "Graduated with a specialization in Software Architecture and Engineering at CentraleSupélec (top 2 French engineering school).<s></s>Additional cursus in Entrepreneurship during the last year.<h>Main courses:</h><u><l>Software Engineering and Algorithms</l><l>System and Network Infrastructures</l><l>Applicative Architectures</l><l>Economics and Management of IT</l><l>Strategic Transformation of IT</l></u><h>Other courses:</h><u><l>Design</l><l>Economics</l><l>Data Engineering</l><l>Maths and Statistics</l><l>Electronics and Physics</l></u>"
+    },
+    "kaist": {
+      "name": "Semester Abroad",
+      "time": {
+        "begin": "2022-01",
+        "end": "2022-07"
+      },
+      "children": "A semester abroad at 한국과학기술원 🇰🇷 (top 1 South Korean university) in the Department of Mechanical Engineering.<h>Courses:</h><u><l>Machine Learning for Robotics</l><l>Coding Theory</l><l>Robot Dynamics</l><l>Lean Startup Methodology</l></u>"
+    },
+    "sorbonne": {
+      "name": "Bachelor's Degree in Philosophy",
+      "time": {
+        "begin": "2020-09",
+        "end": "2021-06"
+      },
+      "children": "Followed L3 philosophy courses at the Sorbonne University (Paris IV) during the first year of my engineering studies.<h>Topics:</h><u><l>Logic</l><l>Ethics</l><l>Political Philosophy</l><l>Metaphysics</l><l>Philosophy of Language</l><l>Indian Philosophy</l></u>"
+    },
+    "prepa": {
+      "name": "Preparatory Classes",
+      "time": {
+        "begin": "2018-09",
+        "end": "2020-06"
+      },
+      "children": "Preparatory classes in Mathematics, Physics and Engineering Sciences (MPSI/MP*) at Lycée Pierre Corneille in Rouen"
+    }
+  }
+}

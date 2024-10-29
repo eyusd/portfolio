@@ -1,0 +1,80 @@
+{
+  "Metadata": {
+    "title": "Clément Chardine",
+    "description": "Das bin ich!"
+  },
+  "About": {
+    "code": "In meinen frühen Tagen begann ich, die Entwicklung durch das Erstellen kleiner Projekte zu erkunden und war schnell fasziniert von den grenzenlosen Möglichkeiten des Programmierens. Im Laufe der Jahre hatte ich das Privileg, als Software-Ingenieur zu arbeiten, und schließlich gründete ich mit <sniivelink>Sniive</sniivelink> ein Unternehmen, in dem ich als CTO Lösungen entwickelte, um den Wissensaustausch in Teams zu erleichtern. Zuvor arbeitete ich an innovativen Projekten bei Unternehmen wie <cedelink>CEDE Labs</cedelink> und <wanderlink>Wandercraft</wanderlink>, stets mit dem Ziel, Software zu entwickeln, die robuste Funktionalität mit intuitivem Design verbindet.",
+    "other": "Mein heutiger Fokus liegt auf der Gestaltung eleganter Architekturen, die das Benutzererlebnis verbessern und gleichzeitig komplexe, datengetriebene Anwendungen unterstützen. Wenn ich nicht tief im Code stecke, mache ich entweder <spotilink>Musik</spotilink>, höre Musik, verfeinere meine Playlists oder erkunde die neuesten Trends in Technik und KI."
+  },
+  "Identity": {
+    "title": "Software-Ingenieur",
+    "location": "Paris, Frankreich",
+    "subtitle": "Ich bin ein Software-Ingenieur mit Leidenschaft für Software-Architektur und innovative Ideen"
+  },
+  "Navbar": {
+    "about": "Über mich",
+    "experience": "Erfahrung",
+    "education": "Ausbildung"
+  },
+  "Experiences": {
+    "sniive": {
+      "name": "Mitgründer & CTO",
+      "time": {
+        "begin": "2024-04",
+        "end": "2024-11"
+      },
+      "children": "Erfahrung im Unternehmertum, fokussiert auf die Schaffung einer SaaS-Plattform zur schnellen Dokumentation von Geschäftsprozessen. Ich leitete die Produktentwicklung von Grund auf und deckte alle Aspekte ab, einschließlich Frontend, Backend und Cloud-Dienste.<h>Technische Highlights:</h><u><l>Umfangreicher Einsatz von GenAI (multimodale LLMs) und AI-Vision-Technologien</l><l>Full-Stack-Entwicklung für eine Webanwendung, gehostet auf Vercel</l><l>Cloud-Infrastrukturverwaltung auf Azure, mit Schwerpunkt auf serverloser Architektur und Mikroservices</l><l>Plattformübergreifende Desktop-Anwendungsentwicklung mit Rust und Tauri</l></u><h>Geschäftliche Highlights:</h><u><l>B2B-orientiert, mit über 2.000$ in Vorverkäufen gesichert</l><l>Iterativer Entwicklungsansatz mit Fokus auf Kundenfeedback</l><l>Inkubiert bei STATION F, dem größten Startup-Campus der Welt</l><l>Unterstützt von CentraleSupélec und führenden französischen Unternehmern</l></u>"
+    },
+    "cede": {
+      "name": "Fullstack-Entwickler",
+      "time": {
+        "begin": "2023-03",
+        "end": "2024-08"
+      },
+      "children": "Arbeitete an der Entwicklung einer SaaS-Plattform und einer Chrome-Erweiterung zur Verwaltung digitaler Assets, sowohl in zentralisierten als auch dezentralisierten Netzwerken.<h>Hauptverantwortungen:</h><u><l>Umfassende Neustrukturierung der Business-Logik der Erweiterung für bessere Leistung und eine optimierte Entwicklererfahrung</l><l>Erstellung einer API für die Plattform, die jetzt als SDK für externe Entwickler verfügbar ist</l><l>F&E-Projekt für eine native mobile Anwendung für die Plattform</l></u>"
+    },
+    "wandercraft": {
+      "name": "Software-Entwickler",
+      "time": {
+        "begin": "2022-09",
+        "end": "2023-02"
+      },
+      "children": "Entwickelte ein Tool zur Überwachung und Diagnose von Problemen mit dem Exoskelett. Die Anwendung wurde von Wartungsteams und Ingenieuren sowohl für Fern- als auch für Vor-Ort-Support verwendet.<s></s>Das Tool nutzte das EtherCAT-Protokoll zur Kommunikation mit dem Exoskelett und konzentrierte sich auf Erkenntnisse aus einem komplexen und möglicherweise fehlerhaften System."
+    }
+  },
+  "Educations": {
+    "centralesupelec": {
+      "name": "Master-Abschluss in Ingenieurwissenschaften",
+      "time": {
+        "begin": "2020-09",
+        "end": "2024-04"
+      },
+      "children": "Abschluss mit Schwerpunkt in Software-Architektur und Ingenieurwesen an der CentraleSupélec (Top 2 Ingenieurschule in Frankreich).<s></s>Zusätzliches Studium in Unternehmertum im letzten Jahr.<h>Hauptkurse:</h><u><l>Software Engineering und Algorithmen</l><l>System- und Netzwerkinfrastrukturen</l><l>Applikationsarchitekturen</l><l>Ökonomie und Management der IT</l><l>Strategische Transformation der IT</l></u><h>Weitere Kurse:</h><u><l>Design</l><l>Wirtschaft</l><l>Daten-Engineering</l><l>Mathematik und Statistik</l><l>Elektronik und Physik</l></u>"
+    },
+    "kaist": {
+      "name": "Auslandssemester",
+      "time": {
+        "begin": "2022-01",
+        "end": "2022-07"
+      },
+      "children": "Ein Auslandssemester an der 한국과학기술원 🇰🇷 (Top 1 Universität in Südkorea) im Fachbereich Maschinenbau.<h>Kurse:</h><u><l>Maschinelles Lernen für Robotik</l><l>Kodierungstheorie</l><l>Roboterdynamik</l><l>Lean-Startup-Methodologie</l></u>"
+    },
+    "sorbonne": {
+      "name": "Bachelor-Abschluss in Philosophie",
+      "time": {
+        "begin": "2020-09",
+        "end": "2021-06"
+      },
+      "children": "Belegte Philosophie-Kurse im dritten Studienjahr an der Sorbonne-Universität (Paris IV) während des ersten Jahres meines Ingenieurstudiums.<h>Themen:</h><u><l>Logik</l><l>Ethik</l><l>Politische Philosophie</l><l>Metaphysik</l><l>Sprachphilosophie</l><l>Indische Philosophie</l></u>"
+    },
+    "prepa": {
+      "name": "Vorbereitungskurse",
+      "time": {
+        "begin": "2018-09",
+        "end": "2020-06"
+      },
+      "children": "Vorbereitungskurse in Mathematik, Physik und Ingenieurwissenschaften (MPSI/MP*) am Lycée Pierre Corneille in Rouen"
+    }
+  }
+}
