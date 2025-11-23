@@ -12,6 +12,14 @@
     "location": "París, Francia",
     "subtitle": "Soy un ingeniero de software con pasión por la arquitectura de software y las ideas innovadoras"
   },
+  "TopNav": {
+    "portfolio": "Portfolio",
+    "lab": "Lab"
+  },
+  "Lab": {
+    "title": "Lab",
+    "description": "Una colección de cosas interesantes que he encontrado y experimentos que he realizado"
+  },
   "Navbar": {
     "about": "Sobre mí",
     "experience": "Experiencia",

@@ -1,6 +1,4 @@
 import { Icons } from "@/components/icons"
-import { LanguageSwitch } from "@/components/ui/language-switch"
-import { ModeToggle } from "@/components/ui/mode-toggle"
 import { Link } from "@/i18n/routing"
 
 
@@ -36,12 +34,6 @@ export const Links = () => {
         >
           <span className="text-2xl hover:text-primary">@</span>
         </Link>
-      </li>
-      <li className="text-xs ml-auto mr-5">
-        <LanguageSwitch />
-      </li>
-      <li className="text-xs mr-5">
-        <ModeToggle />
       </li>
     </ul>
   )

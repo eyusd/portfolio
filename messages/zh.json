@@ -12,6 +12,14 @@
     "location": "法国，巴黎",
     "subtitle": "我是一名热衷于软件架构和创新理念的软件工程师"
   },
+  "TopNav": {
+    "portfolio": "作品集",
+    "lab": "实验室"
+  },
+  "Lab": {
+    "title": "实验室",
+    "description": "我发现的有趣内容和实验的集合"
+  },
   "Navbar": {
     "about": "关于",
     "experience": "经验",

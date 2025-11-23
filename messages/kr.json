@@ -12,6 +12,14 @@
     "location": "파리, 프랑스",
     "subtitle": "소프트웨어 아키텍처와 혁신적인 아이디어에 열정을 가진 소프트웨어 엔지니어입니다"
   },
+  "TopNav": {
+    "portfolio": "포트폴리오",
+    "lab": "실험실"
+  },
+  "Lab": {
+    "title": "실험실",
+    "description": "제가 발견한 흥미로운 것들과 진행한 실험들의 모음"
+  },
   "Navbar": {
     "about": "소개",
     "experience": "경력",

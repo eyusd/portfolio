@@ -1,0 +1,52 @@
+export const metadata = {
+  title: "Brute forcing the make 10 game",
+  description: "A small project to brute-force the 'Make 10' puzzle for every 4-digit input (0000–9999). I describe the rules, the operations I allowed, and the solver's results — including the handful of inputs my solver couldn't find solutions for.",
+  date: "2025-11-23",
+  slug: "make-10-solutions",
+};
+
+import { Make10List } from "@/components/make-10-list";
+import solutions from "../data/make-10-solutions.json";
+
+There is a common pastime for commuters called the **[Sydney Train Game](https://en.wikipedia.org/wiki/Sydney_train_game)**. The premise is simple: take the four digits of the carriage number and combine them using basic arithmetic to reach 10. Usually, the rules are loose—you can rearrange the digits however you like.
+
+I’ve been toying with a stricter variant. In my version, the digits must remain in their original order. `1234` is a distinct problem from `4321`.
+
+I recently decided to automate the solution for every integer from `0000` to `9999`. I wrote a solver in Rust—some truly ugly, non-idiomatic Rust—to see how many of these combinations could actually be solved given a specific set of operations.
+
+### The Rules and The Arithmetic
+
+The target is always **10**.
+The input is a 4-digit string. Order is immutable.
+
+To make this interesting (and solvable), I had to expand the standard operator set. Standard arithmetic isn't enough to cover the search space, but I also didn't want to allow infinite complexity.
+
+I allowed the following operations:
+
+*   **Standard:** [Addition](https://en.wikipedia.org/wiki/Addition), [Subtraction](https://en.wikipedia.org/wiki/Subtraction), [Multiplication](https://en.wikipedia.org/wiki/Multiplication), [Division](https://en.wikipedia.org/wiki/Division).
+*   **Exponents/Roots:** [Exponentiation](https://en.wikipedia.org/wiki/Exponentiation), [Square Root](https://en.wikipedia.org/wiki/Square_root), and [n-th Root](https://en.wikipedia.org/wiki/Nth_root).
+*   **Functions:** [Logarithms](https://en.wikipedia.org/wiki/Logarithm), [Factorials](https://en.wikipedia.org/wiki/Factorial), [Modulus](https://en.wikipedia.org/wiki/Modulo_operation), and [Absolute Value](https://en.wikipedia.org/wiki/Absolute_value).
+*   **The Triangular Number:** I included the triangular number, symbolized here using Knuth’s notation as `?`. (e.g., `3?` = 6). You can read more about it [here](https://en.wikipedia.org/wiki/Triangular_number).
+
+### The 19 Outliers
+
+After running the script against all 10,000 combinations, the solver managed to crack 9,981 of them.
+
+However, there are **19 numbers** that my code could not solve.
+
+It is entirely possible that solutions exist for these, but they likely require an operator I haven't implemented or a search depth I wasn't willing to compute. If you see a solution for any of these (preserving the digit order), I’d be interested to hear it.
+
+**The Unsolved List:** 0607, 0670, 0671, 0706, 0716, 0760, 0761, 1670, 1671, 1706, 1716, 1760, 1761, 6070, 6071, 6170, 6171, 7060, 7061.
+
+Below is the full, exported list of solutions that the solver produced for every 4-digit input. The interactive list includes the simplest found expression for each solvable input; the unsolved inputs above just show "NoSolution".
+
+<Make10List solutions={solutions} />
+
+
+### The Implementation
+
+The code itself is nothing revolutionary. It’s a brute-force depth-first search that constructs an expression tree. The biggest challenge wasn't the math, but the constraints of the machine.
+
+1.  **Termination:** Nesting factorials and triangular numbers leads to overflows very quickly. I had to cap the search depth aggressively to prevent the code from running until the heat death of the universe.
+2.  **Formatting:** I spent an unreasonable amount of time fighting with LaTeX formatting to ensure the output didn't look like ASCII soup.
+3.  **Heuristics:** I didn't just want *a* solution; I wanted the *simplest* one. I weighted the solver to prefer basic arithmetic (`+`, `-`) over "weapons of mass destruction" like the triangular operator or nested roots. It only pulls out the heavy artillery when absolutely necessary (or at least, that's what I tried).

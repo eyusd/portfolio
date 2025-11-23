@@ -12,6 +12,14 @@
     "location": "Paris, France",
     "subtitle": "Je suis un ingénieur logiciel passionné par l'architecture logicielle et les idées innovantes"
   },
+  "TopNav": {
+    "portfolio": "Portfolio",
+    "lab": "Lab"
+  },
+  "Lab": {
+    "title": "Lab",
+    "description": "Une collection de choses intéressantes que j'ai trouvées et d'expériences que j'ai menées"
+  },
   "Navbar": {
     "about": "À propos",
     "experience": "Expérience",

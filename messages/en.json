@@ -12,6 +12,14 @@
     "location": "Paris, France",
     "subtitle": "I am a software engineer with a passion for software architecture and innovative ideas"
   },
+  "TopNav": {
+    "portfolio": "Portfolio",
+    "lab": "Lab"
+  },
+  "Lab": {
+    "title": "Lab",
+    "description": "A collection of interesting things I've found and experiments I've run"
+  },
   "Navbar": {
     "about": "About",
     "experience": "Experience",

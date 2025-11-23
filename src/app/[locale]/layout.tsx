@@ -1,10 +1,14 @@
 import localFont from "next/font/local";
 import { ThemeProvider } from "@/components/theme-provider";
+import { TopNav } from "@/components/top-nav";
 import { routing } from '@/i18n/routing';
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages } from 'next-intl/server';
 import { Locale } from "@/i18n/locale";
 import "./globals.css";
+import "katex/dist/katex.min.css";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -47,6 +51,7 @@ export default async function HomeLayout({
     notFound();
   }
   setRequestLocale(locale);
+  const messages = await getMessages();
 
   return (
     <html lang={locale} className="scroll-smooth" suppressHydrationWarning>
@@ -58,7 +63,10 @@ export default async function HomeLayout({
           defaultTheme="system"
           enableSystem
         >
-          {children}
+          <NextIntlClientProvider messages={messages}>
+            <TopNav />
+            {children}
+          </NextIntlClientProvider>
         </ThemeProvider>
       </body>
     </html>
