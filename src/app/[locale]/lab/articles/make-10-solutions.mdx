@@ -28,21 +28,12 @@ I allowed the following operations:
 *   **Functions:** [Logarithms](https://en.wikipedia.org/wiki/Logarithm), [Factorials](https://en.wikipedia.org/wiki/Factorial), [Modulus](https://en.wikipedia.org/wiki/Modulo_operation), and [Absolute Value](https://en.wikipedia.org/wiki/Absolute_value).
 *   **The Triangular Number:** I included the triangular number, symbolized here using Knuth’s notation as `?`. (e.g., `3?` = 6). You can read more about it [here](https://en.wikipedia.org/wiki/Triangular_number).
 
-### The 19 Outliers
-
-After running the script against all 10,000 combinations, the solver managed to crack 9,981 of them.
-
-However, there are **19 numbers** that my code could not solve.
-
-It is entirely possible that solutions exist for these, but they likely require an operator I haven't implemented or a search depth I wasn't willing to compute. If you see a solution for any of these (preserving the digit order), I’d be interested to hear it.
-
-**The Unsolved List:** 0607, 0670, 0671, 0706, 0716, 0760, 0761, 1670, 1671, 1706, 1716, 1760, 1761, 6070, 6071, 6170, 6171, 7060, 7061.
-
-Below is the full, exported list of solutions that the solver produced for every 4-digit input. The interactive list includes the simplest found expression for each solvable input; the unsolved inputs above just show "NoSolution".
+Below is the full, exported list of solutions that the solver produced for every 4-digit input. The interactive list includes the simplest found expression for each solvable input.
 
 <Make10List solutions={solutions} />
 
 
+**Addendum:** The original goal was to find solutions using only basic arithmetic (addition, subtraction, multiplication, division). The triangular operator `?` was included sparingly — only for cases that would otherwise be impossible to solve within a reasonable search depth. I’d be happy to see simpler solutions that rely on the modulus operator (`mod`) or the triangular operator (`?`) (preserving digit order); please share any you find and I’ll incorporate them.
 ### The Implementation
 
 The code itself is nothing revolutionary. It’s a brute-force depth-first search that constructs an expression tree. The biggest challenge wasn't the math, but the constraints of the machine.
