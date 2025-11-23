@@ -18,6 +18,13 @@
     "education": "Ausbildung"
   },
   "Experiences": {
+    "eledone": {
+      "name": "Tech Lead",
+      "time": {
+        "begin": "2024-11"
+      },
+      "children": "Führende technische Entwicklung bei Eledone, einem KI-gestützten Startup, das die B2B-Verwaltungsprozesse für Angebote und Bestellungen durch intelligente Verarbeitung automatisiert. Aufbau einer robusten Plattform, die sich mit wichtigen ERP-Systemen verbindet und fortgeschrittene KI-Modelle für die Dokumentenverarbeitung nutzt.<h>Technische Highlights:</h><u><l>Backend-Entwicklung mit Python und Django für zentrale KI-Verarbeitungspipelines</l><l>Frontend-Entwicklung mit Next.js und TypeScript für intuitive Benutzeroberflächen</l><l>Cloud-Infrastruktur auf der Google Cloud Platform (GCP)</l><l>Integration mit mehreren ERP-Systemen und Automatisierung der E-Mail-Verarbeitung</l><l>Optimierung von KI/ML-Modellen für Dokumentenextraktion und Datenabgleich</l></u><h>Business-Highlights:</h><u><l>Unterstützt von CentraleSupélec, HEC Paris, Station F und Wilco</l><l>Bedient Dutzende von B2B-Kunden mit automatisierter Angebots- und Bestellverarbeitung</l><l>Plug-and-Play-Lösung, kompatibel mit allen wichtigen ERP-Systemen</l></u>"
+    },
     "sniive": {
       "name": "Mitgründer & CTO",
       "time": {

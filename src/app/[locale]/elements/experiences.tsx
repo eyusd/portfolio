@@ -7,7 +7,7 @@ export const Experiences = () => {
   
   const dateFormatter = (key: string) => {
     const begin = new Date(t(`${key}.begin`));
-    const end = new Date(t(`${key}.end`));
+    const end = t.has(`${key}.end`) ? new Date(t(`${key}.end`)) : new Date();
     return {
       begin: format.dateTime(begin, { month: "short", year: "numeric" }),
       end: format.dateTime(end, { month: "short", year: "numeric" }),
@@ -16,6 +16,63 @@ export const Experiences = () => {
 
 
   const experiences: ExperienceProps[] = [
+    {
+      title: {
+        name: t("eledone.name"),
+        company: "Eledone",
+        link: "https://eledone-ai.com",
+      },
+      time: dateFormatter("eledone.time"),
+      children: t.rich("eledone.children", {
+        h: (chunks) => <span className="block mt-2 font-semibold">{chunks}</span>,
+        u: (chunks) => <ul className="ml-4 list-disc">{chunks}</ul>,
+        l: (chunks) => <li>{chunks}</li>,
+      }),
+      references: [
+        {
+          name: "LinkedIn",
+          link: "https://www.linkedin.com/company/eledone",
+        },
+      ],
+      techs: [
+        {
+          name: "Python",
+          icon: "🐍",
+        },
+        {
+          name: "Django",
+          icon: "🎸",
+        },
+        {
+          name: "TypeScript",
+          icon: "🦄",
+        },
+        {
+          name: "Next.js",
+          icon: "🚀",
+        },
+        {
+          name: "GCP",
+          icon: "☁️",
+        },
+        {
+          name: "Docker",
+          icon: "🐳",
+        },
+        {
+          name: "Kubernetes",
+          icon: "☸️",
+        },
+        {
+          name: "AI/ML",
+          icon: "🤖",
+        },
+        {
+          name: "Hugging Face",
+          icon: "🤗",
+        }
+      ],
+    },
     {
       title: {
         name: t("sniive.name"),

@@ -18,6 +18,13 @@
     "education": "Éducation"
   },
   "Experiences": {
+    "eledone": {
+      "name": "Tech Lead",
+      "time": {
+        "begin": "2024-11"
+      },
+      "children": "Direction du développement technique chez Eledone, une startup propulsée par l’IA qui automatise l’administration des ventes B2B grâce au traitement intelligent des devis et des commandes. Construction d’une plateforme robuste connectée aux principaux systèmes ERP et exploitant des modèles d’IA avancés pour le traitement de documents.<h>Points techniques clés:</h><u><l>Développement backend avec Python et Django pour les pipelines de traitement IA</l><l>Développement frontend avec Next.js et TypeScript pour des interfaces utilisateur intuitives</l><l>Infrastructure cloud sur Google Cloud Platform (GCP)</l><l>Intégration avec plusieurs systèmes ERP et automatisation du traitement des e-mails</l><l>Optimisation de modèles IA/ML pour l’extraction de documents et la correspondance de données</l></u><h>Points business clés:</h><u><l>Soutenu par CentraleSupélec, HEC Paris, Station F et Wilco</l><l>Au service de dizaines de clients B2B avec un traitement automatisé des commandes et des devis</l><l>Solution plug & play compatible avec tous les principaux systèmes ERP</l></u>"
+    },
     "sniive": {
       "name": "Cofondateur et CTO",
       "time": {

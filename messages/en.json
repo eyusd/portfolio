@@ -18,6 +18,13 @@
     "education": "Education"
   },
   "Experiences": {
+    "eledone": {
+      "name": "Tech Lead",
+      "time": {
+        "begin": "2024-11"
+      },
+      "children": "Leading technical development at Eledone, an AI-powered startup automating B2B sales administration through intelligent processing of quotes and orders. Building a robust platform that connects with major ERP systems and leverages advanced AI models for document processing.<h>Tech highlights:</h><u><l>Backend development with Python and Django for core AI processing pipelines</l><l>Frontend development with Next.js and TypeScript for intuitive user interfaces</l><l>Cloud infrastructure on Google Cloud Platform (GCP)</l><l>Integration with multiple ERP systems and email processing automation</l><l>AI/ML model optimization for document extraction and data matching</l></u><h>Business highlights:</h><u><l>Supported by CentraleSupélec, HEC Paris, Station F, and Wilco</l><l>Serving dozens of B2B clients with automated order and quote processing</l><l>Plug & play solution compatible with all major ERP systems</l></u>"
+    },
     "sniive": {
       "name": "Cofounder & CTO",
       "time": {

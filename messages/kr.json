@@ -18,6 +18,13 @@
     "education": "교육"
   },
   "Experiences": {
+    "eledone": {
+      "name": "테크 리드",
+      "time": {
+        "begin": "2024-11"
+      },
+      "children": "Eledone에서 기술 개발을 총괄하며, 견적서와 주문의 지능형 처리를 통해 B2B 영업 관리를 자동화하는 AI 기반 스타트업입니다. 주요 ERP 시스템과 연동되고 고급 AI 모델을 활용한 문서 처리 기능을 갖춘 견고한 플랫폼을 구축하고 있습니다.<h>기술 하이라이트:</h><u><l>Python과 Django를 사용한 핵심 AI 처리 파이프라인 백엔드 개발</l><l>Next.js와 TypeScript 기반의 직관적인 사용자 인터페이스 프론트엔드 개발</l><l>Google Cloud Platform(GCP) 기반 클라우드 인프라</l><l>여러 ERP 시스템과의 통합 및 이메일 처리 자동화</l><l>문서 추출 및 데이터 매칭을 위한 AI/ML 모델 최적화</l></u><h>비즈니스 하이라이트:</h><u><l>CentraleSupélec, HEC Paris, Station F, Wilco의 지원</l><l>자동화된 견적 및 주문 처리로 수십 개의 B2B 고객사 지원</l><l>모든 주요 ERP 시스템과 호환되는 Plug & Play 솔루션</l></u>"
+    },
     "sniive": {
       "name": "공동 창립자 및 CTO",
       "time": {

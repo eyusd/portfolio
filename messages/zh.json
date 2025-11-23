@@ -18,6 +18,13 @@
     "education": "教育"
   },
   "Experiences": {
+    "eledone": {
+      "name": "Tech Lead",
+      "time": {
+        "begin": "2024-11"
+      },
+      "children": "在 Eledone 负责技术开发，这是一家通过智能处理报价和订单来自动化 B2B 销售管理的人工智能初创公司。我们正在构建一个强大的平台，可连接主流 ERP 系统，并利用先进的 AI 模型进行文档处理。<h>技术亮点：</h><u><l>使用 Python 和 Django 进行核心 AI 处理管道的后端开发</l><l>使用 Next.js 和 TypeScript 进行直观用户界面的前端开发</l><l>基于 Google Cloud Platform（GCP）的云基础设施</l><l>与多个 ERP 系统集成并实现电子邮件处理自动化</l><l>用于文档提取和数据匹配的 AI/ML 模型优化</l></u><h>业务亮点：</h><u><l>获得 CentraleSupélec、HEC Paris、Station F 和 Wilco 的支持</l><l>为数十家 B2B 客户提供自动化的订单和报价处理</l><l>与所有主流 ERP 系统兼容的即插即用解决方案</l></u>"
+    },
     "sniive": {
       "name": "联合创始人兼CTO",
       "time": {
