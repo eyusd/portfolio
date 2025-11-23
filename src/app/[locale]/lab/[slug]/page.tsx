@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
-import { useMDXComponents } from "../../../../../mdx-components";
 import fs from "fs";
 import path from "path";
 
@@ -15,7 +14,6 @@ export interface ArticleMetadata {
 // Get all article slugs for static generation
 export async function generateStaticParams() {
   const articlesDir = path.join(process.cwd(), "src/app/[locale]/lab/articles");
-  
   if (!fs.existsSync(articlesDir)) {
     return [];
   }
@@ -72,15 +70,6 @@ export default async function ArticlePage({
     notFound();
   }
 
-  // Provide an explicit `code` renderer to ensure inline backtick code is handled
-  const mdxComponents = {
-    code: ({ className, children, ...props }: any) => (
-      <code className={`font-mono rounded px-1 text-sm bg-muted/10 ${className ?? ""}`} {...props}>
-        {children}
-      </code>
-    ),
-  };
-
   return (
     <div className="container mx-auto max-w-3xl px-6 py-16">
       <article>
@@ -103,7 +92,7 @@ export default async function ArticlePage({
         </header>
         
         <div className="prose prose-neutral dark:prose-invert max-w-none">
-          <ArticleContent components={mdxComponents} />
+          <ArticleContent />
         </div>
       </article>
     </div>
