@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
 import fs from "fs";
 import path from "path";
+import "katex/dist/katex.min.css";
 
 // This will be our article metadata type
 export interface ArticleMetadata {
@@ -34,14 +35,33 @@ export async function generateMetadata({
 }: {
   params: Promise<{ locale: string; slug: string }>;
 }) {
-  const { slug } = await params;
+  const { locale, slug } = await params;
   
   // Import the MDX file dynamically to get its metadata
   try {
     const article = await import(`../articles/${slug}.mdx`);
+    const metadata = article.metadata;
+    
     return {
-      title: article.metadata?.title || slug,
-      description: article.metadata?.description || "",
+      title: metadata?.title || slug,
+      description: metadata?.description || "",
+      openGraph: {
+        title: metadata?.title || slug,
+        description: metadata?.description || "",
+        type: 'article',
+        publishedTime: metadata?.date,
+        authors: ['Clément Chardine'],
+        locale: locale,
+        url: `/${locale}/lab/${slug}`,
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: metadata?.title || slug,
+        description: metadata?.description || "",
+      },
+      alternates: {
+        canonical: `/${locale}/lab/${slug}`,
+      },
     };
   } catch {
     return {

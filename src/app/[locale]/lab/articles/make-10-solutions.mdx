@@ -12,7 +12,7 @@ There is a common pastime for commuters called the **[Sydney Train Game](https:/
 
 I’ve been toying with a stricter variant. In my version, the digits must remain in their original order. `1234` is a distinct problem from `4321`.
 
-I recently decided to automate the solution for every integer from `0000` to `9999`. I wrote a solver in Rust—some truly ugly, non-idiomatic Rust—to see how many of these combinations could actually be solved given a specific set of operations.
+I recently decided to automate the solution for every integer from `0000` to `9999`. I wrote a solver in Rust (a real mess of a code) to see how many of these combinations could actually be solved given a specific set of operations.
 
 ### The Rules and The Arithmetic
 
@@ -28,7 +28,7 @@ I allowed the following operations:
 *   **Functions:** [Logarithms](https://en.wikipedia.org/wiki/Logarithm), [Factorials](https://en.wikipedia.org/wiki/Factorial), [Modulus](https://en.wikipedia.org/wiki/Modulo_operation), and [Absolute Value](https://en.wikipedia.org/wiki/Absolute_value).
 *   **The Triangular Number:** I included the triangular number, symbolized here using Knuth’s notation as `?`. (e.g., `3?` = 6). You can read more about it [here](https://en.wikipedia.org/wiki/Triangular_number).
 
-Below is the full, exported list of solutions that the solver produced for every 4-digit input. The interactive list includes the simplest found expression for each solvable input.
+Below is the full, exported list of solutions that the solver produced for every 4-digit input. The interactive list includes the simplest found expression for each input.
 
 <Make10List solutions={solutions} />
 

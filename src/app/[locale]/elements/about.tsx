@@ -10,6 +10,7 @@ export const About = () => {
       <p className="mb-4">
         {t.rich("code", {
           sniivelink: (chunks) => <InlineLink href="https://sniive.com">{chunks}</InlineLink>,
+          eledonelink: (chunks) => <InlineLink href="https://eledone-ai.com">{chunks}</InlineLink>,
           cedelink: (chunks) => <InlineLink href="https://cede.store/">{chunks}</InlineLink>,
           wanderlink: (chunks) => <InlineLink href="https://www.wandercraft.eu/">{chunks}</InlineLink>,
         })}
