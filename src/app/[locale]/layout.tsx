@@ -8,6 +8,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { Locale } from "@/i18n/locale";
 import { generateStructuredData } from "@/lib/structured-data";
+import Script from "next/script";
 import "./globals.css";
 
 const geistSans = localFont({
@@ -73,26 +74,49 @@ export default async function HomeLayout({
   return (
     <html lang={locale} className="scroll-smooth" suppressHydrationWarning>
       <head>
-        <script
+        <meta name="color-scheme" content="dark light" />
+      </head>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} bg-background leading-relaxed text-muted-foreground antialiased selection:bg-secondary selection:text-primary`}
+      >
+        <Script
+          id="theme-script"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                const theme = localStorage.getItem('portfolio-theme') || 'system';
+                const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                const actualTheme = theme === 'system' ? systemTheme : theme;
+                if (actualTheme === 'dark') {
+                  document.documentElement.classList.add('dark');
+                } else {
+                  document.documentElement.classList.remove('dark');
+                }
+              } catch (e) {}
+            `,
+          }}
+        />
+        <Script
+          id="structured-data-person"
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(structuredData.person),
           }}
         />
-        <script
+        <Script
+          id="structured-data-website"
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(structuredData.website),
           }}
         />
-      </head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} bg-background leading-relaxed text-muted-foreground antialiased selection:bg-secondary selection:text-primary`}
-      >
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
+          disableTransitionOnChange
+          storageKey="portfolio-theme"
         >
           <NextIntlClientProvider messages={messages}>
             <TopNav />

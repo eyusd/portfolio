@@ -15,20 +15,45 @@ export default async function Image() {
     (
       <div
         style={{
-          fontSize: 128,
-          background: 'linear-gradient(to bottom right, #0ea5a4, #0d9488)',
+          background: '#071618', // Dark theme background: hsl(191 58.5% 3.84%)
           width: '100%',
           height: '100%',
           display: 'flex',
-          flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          color: 'white',
-          fontFamily: 'system-ui',
+          padding: '80px',
         }}
       >
-        <div style={{ fontSize: 72, marginBottom: 20 }}>Clément Chardine</div>
-        <div style={{ fontSize: 48, opacity: 0.9 }}>Software Engineer</div>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '32px',
+          }}
+        >
+          {/* Gear emoji favicon */}
+          <div style={{ fontSize: 120 }}>⚙️</div>
+          
+          {/* Name */}
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '8px',
+            }}
+          >
+            <div
+              style={{
+                fontSize: 72,
+                fontWeight: 700,
+                color: '#F0F8F9', // Foreground: hsl(191 9% 97.4%)
+                letterSpacing: '-0.02em',
+              }}
+            >
+              Chardine
+            </div>
+          </div>
+        </div>
       </div>
     ),
     {

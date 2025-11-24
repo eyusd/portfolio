@@ -76,3 +76,30 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+/* View Transitions */
+@supports (view-transition-name: none) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.2s;
+  }
+}
+
+/* Exclude navigation and interactive elements from transitions to prevent flashing */
+nav, button, a, [role="button"] {
+  transition: none !important;
+}
+
+/* Page transition styles - subtle fade only for main content */
+@keyframes fadeIn {
+  from {
+    opacity: 0.95;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+main {
+  animation: fadeIn 0.2s ease-in-out;
+}

@@ -26,6 +26,12 @@ export function LanguageSwitch() {
   const router = useRouter();
   const pathname = usePathname();
 
+  const handleLocaleChange = (newLocale: Locale) => {
+    React.startTransition(() => {
+      router.replace({pathname}, {locale: newLocale});
+    });
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -38,7 +44,7 @@ export function LanguageSwitch() {
         {Object.entries(localeToValue).map(([key, value]) => (
           <DropdownMenuItem
             key={key}
-            onClick={() => router.replace({pathname}, {locale: key as Locale})}
+            onClick={() => handleLocaleChange(key as Locale)}
           >
             {value}
           </DropdownMenuItem>
