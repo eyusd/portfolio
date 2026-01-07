@@ -13,6 +13,12 @@ export default async function LabPage({
   // For now, hardcode articles list - we'll make this dynamic later
   const articles = [
     {
+      slug: "life-percentage",
+      title: "When did I do this for half my life?",
+      description: "An interactive calculator to determine the exact date when an activity accounts for a specific percentage of your total lifespan.",
+      date: "2026-01-07",
+    },
+    {
       slug: "make-10-solutions",
       title: "Brute forcing the make 10 game",
       description: "Brute-forcing the 'Make 10' puzzle for every 4-digit input; results, notes on the solver, and the few outliers.",
