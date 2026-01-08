@@ -153,8 +153,8 @@ export const Experiences = () => {
     {
       title: {
         name: t("cede.name"),
-        company: "CEDE Labs",
-        link: "https://cede.store/",
+        company: "cede.hub",
+        link: "https://cedehub.io/",
       },
       time: dateFormatter("cede.time"),
       children: t.rich("cede.children", {
@@ -199,7 +199,7 @@ export const Experiences = () => {
       title: {
         name: t("wandercraft.name"),
         company: "Wandercraft",
-        link: "https://wandercraft.eu/",
+        link: "https://en.wandercraft.eu/",
       },
       time: dateFormatter("wandercraft.time"),
       children: t.rich("wandercraft.children", {

@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { format } from "date-fns"
-import { CalendarIcon } from "lucide-react"
+import { CalendarIcon, CalendarPlus } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -15,6 +15,12 @@ import {
 } from "@/components/ui/popover"
 import { Button } from "@/components/ui/button"
 import { Slider } from "@/components/ui/slider"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import {
   Form,
   FormControl,
@@ -67,6 +73,61 @@ export function LifePercentageCalculator() {
     const T = (S - p * D) / (1 - p)
     return new Date(T)
   }, [dob, startDate, percentage])
+
+  const handleGoogleCalendar = () => {
+    if (!targetDate || !dob || !startDate) return
+    const title = `Life Percentage Reached: ${percentage?.[0]}%`
+    const description = `Based on my birth date (${format(dob, "PPP")}) and start date (${format(startDate, "PPP")}), I reached ${percentage?.[0]}% of my life with this activity on this day!`
+    
+    const year = targetDate.getFullYear()
+    const month = String(targetDate.getMonth() + 1).padStart(2, "0")
+    const day = String(targetDate.getDate()).padStart(2, "0")
+    const gStart = `${year}${month}${day}`
+    
+    const nextDay = new Date(targetDate)
+    nextDay.setDate(nextDay.getDate() + 1)
+    const gEnd = `${nextDay.getFullYear()}${String(nextDay.getMonth() + 1).padStart(2, "0")}${String(nextDay.getDate()).padStart(2, "0")}`
+    
+    const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${gStart}/${gEnd}&details=${encodeURIComponent(description)}&sf=true&output=xml`
+    window.open(url, "_blank")
+  }
+
+  const handleDownloadICS = () => {
+    if (!targetDate || !dob || !startDate) return
+    const title = `Life Percentage Reached: ${percentage?.[0]}%`
+    const description = `Based on my birth date (${format(dob, "PPP")}) and start date (${format(startDate, "PPP")}), I reached ${percentage?.[0]}% of my life with this activity on this day!`
+    
+    const year = targetDate.getFullYear()
+    const month = String(targetDate.getMonth() + 1).padStart(2, "0")
+    const day = String(targetDate.getDate()).padStart(2, "0")
+    const icsStart = `${year}${month}${day}`
+
+    const nextDay = new Date(targetDate)
+    nextDay.setDate(nextDay.getDate() + 1)
+    const icsEnd = `${nextDay.getFullYear()}${String(nextDay.getMonth() + 1).padStart(2, "0")}${String(nextDay.getDate()).padStart(2, "0")}`
+
+    const icsContent = [
+      "BEGIN:VCALENDAR",
+      "VERSION:2.0",
+      "PRODID:-//Life Percentage Calculator//EN",
+      "BEGIN:VEVENT",
+      `DTSTART;VALUE=DATE:${icsStart}`,
+      `DTEND;VALUE=DATE:${icsEnd}`,
+      `SUMMARY:${title}`,
+      `DESCRIPTION:${description}`,
+      "END:VEVENT",
+      "END:VCALENDAR"
+    ].join("\r\n")
+
+    const blob = new Blob([icsContent], { type: "text/calendar;charset=utf-8" })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement("a")
+    link.href = url
+    link.setAttribute("download", "life-percentage.ics")
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
 
   return (
     <div className="space-y-8 p-6 border rounded-lg bg-card text-card-foreground shadow-sm max-w-md mx-auto my-8">
@@ -146,6 +207,24 @@ export function LifePercentageCalculator() {
             <p className="text-xs text-muted-foreground">
               (Age: {((targetDate.getTime() - values.dob.getTime()) / (1000 * 60 * 60 * 24 * 365.25)).toFixed(1)} years)
             </p>
+            <div className="pt-4 flex justify-center">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" className="gap-2">
+                    <CalendarPlus className="h-4 w-4" />
+                    Add to Calendar
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="center">
+                  <DropdownMenuItem onClick={handleGoogleCalendar}>
+                    Google Calendar
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleDownloadICS}>
+                    Apple / Outlook (.ics)
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </div>
         ) : (
           <p className="text-center text-sm text-muted-foreground h-16 flex items-center justify-center">

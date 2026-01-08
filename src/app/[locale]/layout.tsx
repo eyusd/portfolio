@@ -1,5 +1,5 @@
 import localFont from "next/font/local";
-import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeProvider } from "next-themes";
 import { TopNav } from "@/components/top-nav";
 import { routing } from '@/i18n/routing';
 import { notFound } from "next/navigation";
@@ -71,6 +71,12 @@ export default async function HomeLayout({
   const messages = await getMessages();
   const structuredData = generateStructuredData();
 
+  // Pick only messages that are used in client components to reduce bundle size
+  const clientMessages = {
+    TopNav: messages.TopNav,
+    Navbar: messages.Navbar,
+  };
+
   return (
     <html lang={locale} className="scroll-smooth" suppressHydrationWarning>
       <head>
@@ -118,7 +124,7 @@ export default async function HomeLayout({
           disableTransitionOnChange
           storageKey="portfolio-theme"
         >
-          <NextIntlClientProvider messages={messages}>
+          <NextIntlClientProvider messages={clientMessages}>
             <TopNav />
             {children}
           </NextIntlClientProvider>
