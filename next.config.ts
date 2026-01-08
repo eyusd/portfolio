@@ -1,9 +1,6 @@
 import { NextConfig } from 'next';
 import createNextIntlPlugin from 'next-intl/plugin';
 import createMDX from '@next/mdx';
-import remarkGfm from 'remark-gfm';
-import rehypeSlug from 'rehype-slug';
-import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import bundleAnalyzer from '@next/bundle-analyzer';
  
 /** @type {import('next').NextConfig} */
@@ -29,10 +26,10 @@ const nextConfig: NextConfig = {
 const withMDX = createMDX({
   extension: /\.mdx?$/,
   options: {
-    remarkPlugins: [remarkGfm],
+    remarkPlugins: ['remark-gfm'],
     rehypePlugins: [
-      rehypeSlug,
-      [rehypeAutolinkHeadings, { behavior: 'wrap' }],
+      'rehype-slug',
+      ['rehype-autolink-headings', { behavior: 'wrap' }],
     ],
   },
 });

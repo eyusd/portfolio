@@ -61,7 +61,7 @@ export default async function HomeLayout({
   params,
 }: Readonly<{
   children: React.ReactNode;
-  params: Promise<{locale: Locale}>;
+  params: Promise<{locale: string}>;
 }>) {
   const {locale} = await params;
   if (!routing.locales.includes(locale as Locale)) {
