@@ -1,6 +1,7 @@
 import localFont from "next/font/local";
 import { ThemeProvider } from "next-themes";
 import { TopNav } from "@/components/top-nav";
+import { FloatingDock } from "@/components/floating-dock";
 import { routing } from '@/i18n/routing';
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
@@ -127,6 +128,7 @@ export default async function HomeLayout({
           <NextIntlClientProvider messages={clientMessages}>
             <TopNav />
             {children}
+            <FloatingDock />
           </NextIntlClientProvider>
         </ThemeProvider>
       </body>

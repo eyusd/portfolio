@@ -4,13 +4,13 @@
     "description": "저예요!"
   },
   "About": {
-    "code": "처음에는 작은 프로젝트를 만들어가며 개발을 탐구하기 시작했고, 코딩의 무한한 가능성에 빠르게 매료되었습니다. 수년간 소프트웨어 엔지니어로 일할 기회를 얻었고, 결국 <sniivelink>Sniive</sniivelink>의 공동 창립자이자 CTO로서 팀 내 지식 전수를 효율화하는 솔루션을 개발했습니다. 현재 <eledonelink>Eledone</eledonelink>에서 함께 졸업한 친구들과 합류하여 AI 기반 플랫폼을 구축하며 기술 개발을 이끌고 있습니다. 이전에는 <cedelink>CEDE Labs</cedelink>와 <wanderlink>Wandercraft</wanderlink>와 같은 곳에서 혁신적인 프로젝트에 참여하며, 강력한 기능과 직관적인 디자인을 결합한 소프트웨어를 개발하는 것을 목표로 했습니다.",
-    "other": "현재는 복잡한 데이터 기반 애플리케이션을 지원하면서 사용자 경험을 향상시키는 우아한 아키텍처를 설계하는 데 집중하고 있습니다. 코딩에 몰두하지 않을 때는 <spotilink>음악</spotilink>을 만들거나 듣고, 재생 목록을 수정하거나 최신 기술 및 인공지능 트렌드를 탐구하고 있습니다."
+    "code": "10대 때부터 코드를 작성해왔고, 그 이후로 멈춘 적이 없습니다. 현재 <eledonelink>Eledone</eledonelink>에서 기술을 이끌며 AI를 활용한 B2B 영업 관리 자동화를 담당하고 있습니다. 이전에는 CTO로 <sniivelink>Sniive</sniivelink>를 공동 창업하여 Rust 기반 프로세스 문서화 SaaS 플랫폼을 구축했으며, Station F에서 인큐베이팅했습니다. 또한 <cedelink>CEDE Labs</cedelink>에서 Chrome 확장 프로그램과 개발자 API를, <wanderlink>Wandercraft</wanderlink>에서 의료 외골격 진단 도구를 개발했습니다.",
+    "other": "코딩을 하지 않을 때는 <spotilink>음악</spotilink>을 만들고, 플레이리스트를 관리하며, 관심을 끄는 것이라면 무엇이든 계속 탐구합니다."
   },
   "Identity": {
     "title": "소프트웨어 엔지니어",
     "location": "파리, 프랑스",
-    "subtitle": "소프트웨어 아키텍처와 혁신적인 아이디어에 열정을 가진 소프트웨어 엔지니어입니다"
+    "subtitle": "애플리케이션, 도구, 웹사이트를 개발합니다. 현재 Eledone에서 기술을 이끌며 매일 AI와 함께 일하고 있습니다."
   },
   "TopNav": {
     "portfolio": "포트폴리오",

@@ -4,13 +4,13 @@
     "description": "Clément Chardine 的个人网站"
   },
   "About": {
-    "code": "在我的早期阶段，我通过创建小型项目开始探索开发，很快便被编码的无限可能性所吸引。多年来，我有幸担任软件工程师，最终我共同创办了 <sniivelink>Sniive</sniivelink>，担任 CTO，开发了团队知识传递的简化解决方案。目前，我在 <eledonelink>Eledone</eledonelink> 负责技术开发，与一起毕业的朋友共同构建人工智能平台。在此之前，我曾在 <cedelink>CEDE Labs</cedelink> 和 <wanderlink>Wandercraft</wanderlink> 等公司参与创新项目，致力于打造兼具强大功能和直观设计的软件.",
-    "other": "如今，我专注于构建优雅的架构，提升用户体验的同时支持复杂的数据驱动应用。当我不在编码时，我要么在制作或聆听 <spotilink>音乐</spotilink>、优化我的播放列表，或者探索最新的科技和人工智能趋势。"
+    "code": "我从十几岁就开始写代码，之后从未真正停过。目前我在 <eledonelink>Eledone</eledonelink> 担任技术负责人，负责用AI自动化B2B销售管理。此前，我以CTO身份联合创办了 <sniivelink>Sniive</sniivelink>，用Rust搭建了一个流程文档化SaaS平台，在Station F孵化。我还曾在 <cedelink>CEDE Labs</cedelink> 开发Chrome扩展和开发者API，在 <wanderlink>Wandercraft</wanderlink> 开发医疗外骨骼诊断工具。",
+    "other": "不写代码的时候，我做<spotilink>音乐</spotilink>，研究歌单，持续探索一切引起我兴趣的事物。"
   },
   "Identity": {
     "title": "软件工程师",
     "location": "法国，巴黎",
-    "subtitle": "我是一名热衷于软件架构和创新理念的软件工程师"
+    "subtitle": "我开发应用程序、工具和网站。目前在Eledone担任技术负责人，每天都在使用AI工作。"
   },
   "TopNav": {
     "portfolio": "作品集",

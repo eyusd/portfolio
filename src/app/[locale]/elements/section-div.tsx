@@ -1,4 +1,5 @@
 import { SectionTitle } from "@/components/ui/section-title";
+import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { Section } from "@/lib/sections";
 import { cn } from "@/lib/utils";
 
@@ -10,13 +11,15 @@ interface SectionProps extends React.HTMLAttributes<HTMLElement> {
 
 export function SectionDiv({ children, id, name, className, ...props }: SectionProps) {
   return (
-    <section 
-      id={id}
-      className={cn("mb-16 scroll-mt-16 md:mb-24 lg:mb-36 lg:scroll-mt-24", className)}
-      {...props}
-    >
-      <SectionTitle id={id} name={name} />
-      {children}
-    </section>
+    <ScrollReveal>
+      <section 
+        id={id}
+        className={cn("mb-16 scroll-mt-20 sm:mb-24 md:mb-32", className)}
+        {...props}
+      >
+        <SectionTitle id={id} name={name} />
+        {children}
+      </section>
+    </ScrollReveal>
   )
 }

@@ -4,13 +4,13 @@
     "description": "Das bin ich!"
   },
   "About": {
-    "code": "In meinen frühen Tagen begann ich, die Entwicklung durch das Erstellen kleiner Projekte zu erkunden und war schnell fasziniert von den grenzenlosen Möglichkeiten des Programmierens. Im Laufe der Jahre hatte ich das Privileg, als Software-Ingenieur zu arbeiten, und schließlich gründete ich mit <sniivelink>Sniive</sniivelink> ein Unternehmen, in dem ich als CTO Lösungen entwickelte, um den Wissensaustausch in Teams zu erleichtern. Derzeit leite ich die technische Entwicklung bei <eledonelink>Eledone</eledonelink>, wo ich mich Freunden angeschlossen habe, mit denen ich meinen Abschluss gemacht habe, um eine KI-gestützte Plattform aufzubauen. Zuvor arbeitete ich an innovativen Projekten bei Unternehmen wie <cedelink>CEDE Labs</cedelink> und <wanderlink>Wandercraft</wanderlink>, stets mit dem Ziel, Software zu entwickeln, die robuste Funktionalität mit intuitivem Design verbindet.",
-    "other": "Mein heutiger Fokus liegt auf der Gestaltung eleganter Architekturen, die das Benutzererlebnis verbessern und gleichzeitig komplexe, datengetriebene Anwendungen unterstützen. Wenn ich nicht tief im Code stecke, mache ich entweder <spotilink>Musik</spotilink>, höre Musik, verfeinere meine Playlists oder erkunde die neuesten Trends in Technik und KI."
+    "code": "Ich schreibe Code seit meiner Jugend und habe eigentlich nie damit aufgehört. Aktuell leite ich die Technik bei <eledonelink>Eledone</eledonelink>, wo ich die B2B-Vertriebsadministration mit KI automatisiere. Zuvor habe ich als CTO <sniivelink>Sniive</sniivelink> mitgegründet, eine SaaS-Plattform zur Prozessdokumentation in Rust, inkubiert bei Station F. Darüber hinaus habe ich bei <cedelink>CEDE Labs</cedelink> Chrome-Erweiterungen und Entwickler-APIs gebaut und bei <wanderlink>Wandercraft</wanderlink> Diagnose-Tools für medizinische Exoskelette entwickelt.",
+    "other": "Wenn ich nicht gerade programmiere, mache ich <spotilink>Musik</spotilink>, pflege meine Playlists und erforsche weiter alles, was mein Interesse weckt."
   },
   "Identity": {
     "title": "Software-Ingenieur",
     "location": "Paris, Frankreich",
-    "subtitle": "Ich bin ein Software-Ingenieur mit Leidenschaft für Software-Architektur und innovative Ideen"
+    "subtitle": "Ich entwickle Anwendungen, Tools und Websites. Aktuell leite ich die Technik bei Eledone und arbeite täglich mit KI."
   },
   "TopNav": {
     "portfolio": "Portfolio",
