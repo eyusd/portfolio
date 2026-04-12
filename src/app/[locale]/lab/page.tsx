@@ -17,7 +17,7 @@ export default async function LabPage({
       title: "I built a desktop pet that tells me to stop yelling at my AI",
       description: "How a weekend of Rust, raw macOS FFI, and on-device ML turned into a tiny companion that watches your tone - and why I needed one.",
       date: "2026-04-12",
-      emoji: "🦜",
+      emoji: "😾",
       tags: ["Rust", "macOS", "ML"],
     },
     {
