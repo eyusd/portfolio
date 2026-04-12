@@ -1,0 +1,108 @@
+import Image from "next/image"
+import { ArchitectureDiagram } from "@/components/anchor-architecture"
+
+export const metadata = {
+  title: "I built a desktop pet that tells me to stop yelling at my AI",
+  description: "How a weekend of Rust, raw macOS FFI, and on-device ML turned into a tiny companion that watches your tone",
+  date: "2026-04-12",
+  slug: "anchor",
+};
+
+My job changed. I don't quite write code anymore. I prompt, review, steer, and occasionally beg. Software engineering in 2026 is less about algorithms and more about managing an army of interns that happen to be large language models. Sometimes the interns are brilliant. Sometimes one of them burns 20% of my daily token limit exploring the codebase for the hundredth time when I explicitly told it to refactor *one specific function*.
+
+And when that happens. Maybe I'm tired, maybe there's a bug in prod, maybe I've been at it for hours, anyway, I snap. I type something I wouldn't say to a coworker. I try to be creative though: "You goddamn neanderthal !", "I'll kill your dog if you touch a single line of the function again !!!!!", "Fucking useless clanker...".
+
+It's just a machine predicting words on a screen, right? No harm done.
+
+Except there's a feedback loop. AI models are trained on data, and data that looks like a tyrannical boss yelling at an underpaid employee pattern-matches to... the output of an underpaid employee being yelled at. Which is not great code. So being mean to your AI might literally make it worse. And beyond that pragmatic argument, I just didn't want to watch myself becoming that person. The one who's rude to the waiter because the waiter can't fight back.
+
+<Callout variant="insight" label="Insight">
+Being mean to your AI might literally make it worse. Toxicity pattern-matches to the output of someone being yelled at, which is not great code.
+</Callout>
+
+So I wanted a nudge. Not a popup. Not a "are you sure?" that everyone clicks through faster than they clicked "I accept the terms and conditions." Something alive. Something that makes you *feel* something back.
+
+### The idea
+
+I've been nostalgic for years. I grew up in the Rainmeter era: desktop widgets, custom skins, little creatures living on your taskbar. I vaguely remember a plugin (whose name is lost to time) that put the soot sprites from *Spirited Away* on your screen. Tamagotchis. That whole mood.
+
+So the concept was simple: a tiny pixel-art companion that sits on your screen, reads what you type, and reacts. Kind words, happy face. Harsh words, sad face. Really harsh words, it blocks your Enter key and gives you a second to reconsider. Think of it as Clippy if Clippy had feelings and better judgment.
+
+Right around that time, I read [an article about how Grammarly hooks into macOS](https://lifetips.alibaba.com/tech-efficiency/grammarly-checks-your-spelling-and-grammar-as-you-type) to read what you type system-wide. If Grammarly can do grammar, something similar could do *tone*. On-device, private, no data leaving the machine. The seed was planted.
+
+The name came naturally: <span className="text-2xl font-bold text-primary">安</span>**chor**. 安 (*ān*) is the Chinese character for peace, and "Anchor", because the point is to stay grounded. The other candidate was "fr:3nd," which I rejected for being too weeb and for sharing a name with an AI startup I really dislike.
+
+<Image
+  src="https://raw.githubusercontent.com/eyusd/an.chor/main/resources/icons/app_icon_256.png"
+  alt="[安]chor app icon"
+  width={128}
+  height={128}
+  className="mx-auto my-4 rounded-xl"
+/>
+
+### The rules
+
+I set some constraints before starting:
+
+- **One weekend.** No scope creep. (It crept anyway, but only a little.)
+- **Rust.** I hadn't touched it since [Sniive](https://www.sniive.com), a Tauri-based startup I worked on a year and a half ago. I wanted the practice, and I wanted the performance guarantees - this thing has to run silently in the background across every app without draining your battery.
+- **No Swift.** Yes, it would've been easier for macOS. No, that wasn't the point.
+- **Stay small.** A daemon, not an Electron app. No framework, no web view. Just the binary, the model, and the screen.
+
+### How it works
+
+The app intercepts your keystrokes globally. Yes, it is technically a keylogger. But everything stays on your machine (no network calls, no telemetry, nothing leaves the device, except downloading models and checking for updates). The keystrokes are fed to a toxicity classifier running on [CoreML](https://developer.apple.com/documentation/coreml), which updates a tiny pixel-art companion's mood in real-time.
+
+<ArchitectureDiagram />
+
+The companion is a 32×32 sprite from the [Sprout Lands UI Pack](https://cupnooble.itch.io/sprout-lands-ui-pack) by Cup Nooble. (Finding good spritesheets in 2026 is *way* harder than it was ten years ago when I was tinkering with RPG Maker. The golden age of pixel art asset packs is behind us.) It sits near your active text field, beams when you're being kind, looks worried when you're heating up, and gets visibly upset when you're being mean.
+
+If you press Enter on something the model flags as toxic, the keypress is blocked. The little companion shows its displeasure. You pause. You rephrase.
+
+Or you press Option+Enter to override it and send anyway, because sometimes you really meant it.
+
+The blocking-on-Enter design was an obvious choice. I'm a developer, I submit everything with Enter. No complex gesture, no confirmation dialog, just: your companion caught that one.
+
+When you stop typing for a few minutes, the companion falls asleep, complete with a little breathing animation. It wakes up on the next keystroke. If you've been nice for a while, it puts on sunglasses. Small things, but they make it feel less like a widget and more like a creature.
+
+### The Grammarly dream vs. reality
+
+This is the part where ambition meets a deadline.
+
+The Grammarly article described extracting text from any app via macOS Accessibility APIs. The dream was obvious: read the full text field, know exactly what's written, pinpoint which part is toxic, suggest a rephrased version. Like Grammarly, but for tone.
+
+But Grammarly has a team of engineers and years of iteration. In a weekend, you discover things. Like the fact that not every macOS app exposes proper accessibility attributes. Some apps lie about their UI roles. Some don't expose their text content at all. The idea of reliably extracting the full contents of any text field on any app? That requires extensive per-app heuristics that I simply didn't have time to build.
+
+So the approach shifted. Instead of reading the text field, I track the keystrokes directly and piece together what I can. Every keystroke goes into a [rope](https://en.wikipedia.org/wiki/Rope_(data_structure)) data structure (because users backspace, jump around, Cmd+A, and generally behave like chaos agents in their own text fields). The result is a best-effort representation of what's actually written. I feed the last 512 characters to the model, there's no point penalizing someone for a toxic quote they received from someone else three paragraphs ago.
+
+It's not perfect. False positives happen. False negatives too. But it works most of the time, and "most of the time" turns out to be enough for a gentle nudge.
+
+The model itself is a [DistilBERT multilingual toxicity classifier](https://huggingface.co/gravitee-io/distilbert-multilingual-toxicity-classifier), converted to CoreML. It's about 240 MB, so it downloads on first launch and gets cached. Inference runs on the Apple Neural Engine when available. Two paths: synchronous when you press Enter (about 100ms to decide whether to block), and continuous in the background while you type (updating the companion's mood via an exponential moving average that reacts faster to spikes than to cooldowns, because it's more useful to warn you quickly than to forgive you quickly).
+
+### Rust on macOS in 2026
+
+Honest assessment: it's fine. Not great, not terrible.
+
+The [`objc2`](https://docs.rs/objc2/latest/objc2/) crate family has matured well. Windows, menus, panels, status bar icons... those all just work. But the moment you need something slightly off the beaten path: global event tapping, accessibility observers, CoreML integration ; you're on your own, writing raw FFI against Apple's C APIs. But we live in a time and place where AI agents are great at iterating, so, with a bit of prompting, I was able to get the necessary bindings working.
+
+The upside that makes it all worth it: the final binary is **3 MB**. With LTO, `panic = abort`, and `strip = true`, the entire app (daemon, ML inference pipeline, GPU sprite rendering, settings window) compiles to something smaller than a hero image on most marketing websites. It starts instantly. It runs silently. There is no runtime.
+
+Also, and I genuinely didn't expect this, the multi-threaded architecture ended up being really pleasant in Rust. The keystroke capture, ML inference, accessibility monitoring, and UI rendering all run concurrently, coordinated by [`crossbeam-channel`](https://docs.rs/crossbeam-channel/latest/crossbeam_channel/). It took some time to get right, but the result doesn't feel laggy or janky, most of the time.
+
+The real pain isn't Rust. It's Apple. Shipping a macOS app outside the App Store in 2026 means your users have to right-click → Open to bypass Gatekeeper on first launch. A Developer ID certificate to avoid this costs $99/year. For a free, open-source weekend project, that's a hard pill. The `.app` bundle itself is assembled by a [shell script](https://github.com/eyusd/an.chor/blob/main/bundle.sh), because there is no `cargo bundle` that does what I need. It works, that's all I care about.
+
+### Does it actually work?
+
+Yes. Not because the ML model is flawless, but because the friction is enough.
+
+Seeing the little companion look sad when I type something harsh genuinely makes me pause. I rephrase. I take a breath. The act of pressing Option+Enter to override, choosing *consciously* to send it anyway, is itself a moment of awareness that didn't exist before. Most of the time, I don't override, I just rephrase more kindly.
+
+It's not going to solve internet toxicity. It's a 6,000-line Rust app made in a weekend by one person who was annoyed at himself. But it works on me, and maybe it'll work on someone else.
+
+I've been thinking about adding a small model that could suggest a kinder rephrasing automatically, but current models are still too big to run continuously as a background process without destroying battery life. For now, the nudge is enough. You don't need a machine to tell you the nice version: you just need something to remind you to stop and think of one.
+
+---
+
+[安]chor is open source, MIT-licensed, and available on [GitHub](https://github.com/eyusd/an.chor). If you type things you occasionally regret, to your AI, to your colleagues, or to anyone, maybe give it a look.
+
+Just be nice to everybody who deserves it.
