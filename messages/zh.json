@@ -1,7 +1,7 @@
 {
   "Metadata": {
     "title": "Clément Chardine",
-    "description": "Clément Chardine 的个人网站"
+    "description": "巴黎软件工程师与技术负责人。目前在 Eledone 担任技术主管，前 Sniive 首席技术官。CentraleSupélec 毕业生。"
   },
   "About": {
     "code": "我从十几岁就开始写代码，之后从未真正停过。目前我在 <eledonelink>Eledone</eledonelink> 担任技术负责人，负责用AI自动化B2B销售管理。此前，我以CTO身份联合创办了 <sniivelink>Sniive</sniivelink>，用Rust搭建了一个流程文档化SaaS平台，在Station F孵化。我还曾在 <cedelink>CEDE Labs</cedelink> 开发Chrome扩展和开发者API，在 <wanderlink>Wandercraft</wanderlink> 开发医疗外骨骼诊断工具。",

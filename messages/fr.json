@@ -1,7 +1,7 @@
 {
   "Metadata": {
     "title": "Clément Chardine",
-    "description": "C'est moi"
+    "description": "Ingénieur logiciel et tech lead basé à Paris. Actuellement Tech Lead chez Eledone, ancien CTO chez Sniive. Diplômé de CentraleSupélec."
   },
   "About": {
     "code": "J'écris du code depuis l'adolescence, et je n'ai jamais vraiment arrêté. En ce moment je suis tech lead chez <eledonelink>Eledone</eledonelink>, où j'automatise l'administration des ventes B2B avec de l'IA. Précédemment, j'ai cofondé <sniivelink>Sniive</sniivelink> en tant que CTO, une plateforme SaaS de documentation de processus en Rust, incubée à Station F. J'ai aussi développé des extensions Chrome et des APIs pour développeurs chez <cedelink>CEDE Labs</cedelink>, et des outils de diagnostic pour des exosquelettes médicaux chez <wanderlink>Wandercraft</wanderlink>.",

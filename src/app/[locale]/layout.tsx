@@ -41,17 +41,17 @@ export async function generateMetadata({
   const t = await getTranslations({locale, namespace: 'Metadata'});
  
   return {
-    title: t('title'),
+    description: t('description'),
     alternates: {
-      canonical: `/${locale}`,
+      canonical: locale === routing.defaultLocale ? '/' : `/${locale}`,
       languages: {
-        'en': '/en',
+        'en': '/',
         'fr': '/fr',
         'zh': '/zh',
         'es': '/es',
         'de': '/de',
-        'kr': '/kr',
-        'x-default': '/en',
+        'ko': '/ko',
+        'x-default': '/',
       },
     },
   };
@@ -82,6 +82,18 @@ export default async function HomeLayout({
     <html lang={locale} className="scroll-smooth" suppressHydrationWarning>
       <head>
         <meta name="color-scheme" content="dark light" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData.person) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData.website) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData.profilePage) }}
+        />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} bg-background leading-relaxed text-muted-foreground antialiased selection:bg-secondary selection:text-primary`}
@@ -102,20 +114,6 @@ export default async function HomeLayout({
                 }
               } catch (e) {}
             `,
-          }}
-        />
-        <Script
-          id="structured-data-person"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(structuredData.person),
-          }}
-        />
-        <Script
-          id="structured-data-website"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(structuredData.website),
           }}
         />
         <ThemeProvider

@@ -17,7 +17,7 @@ const localeToValue: Record<Locale, string> = {
   fr: "🇫🇷 Français",
   es: "🇪🇸 Español",
   de: "🇩🇪 Deutsch",
-  kr: "🇰🇷 한국말",
+  ko: "🇰🇷 한국말",
   zh: "🇨🇳 中文",
 }
 

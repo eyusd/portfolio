@@ -8,7 +8,7 @@ My personal website and portfolio, built with [Next.js](https://nextjs.org), [Ta
 
 - **Framework**: Next.js 16 (App Router)
 - **Styling**: Tailwind CSS + shadcn/ui
-- **i18n**: next-intl (en, fr, zh, es, de, kr)
+- **i18n**: next-intl (en, fr, zh, es, de, ko)
 - **Animations**: Framer Motion
 - **Deployment**: Netlify
 

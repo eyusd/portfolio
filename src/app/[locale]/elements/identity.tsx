@@ -11,6 +11,12 @@ export const Identity = () => {
       <HyperText 
         className="text-3xl font-bold tracking-tight text-foreground sm:text-5xl md:text-6xl lg:text-7xl"
         text="Clément Chardine"
+        animateOnLoad={false}
+        framerProps={{
+          initial: { opacity: 1, y: 0 },
+          animate: { opacity: 1, y: 0 },
+          exit: { opacity: 0, y: 3 },
+        }}
       />
       <h2 className="mt-4 text-lg font-medium tracking-tight text-foreground sm:text-xl md:text-2xl">
         {t("title")}
@@ -24,6 +30,7 @@ export const Identity = () => {
           words={t("subtitle")}
           className="text-sm sm:text-base font-normal"
           duration={0.3}
+          filter={false}
         />
       </div>
     </div>

@@ -25,7 +25,6 @@ export const Educations = () => {
           className="mx-auto"
           width={64}
           height={64}
-          priority
         />
       ),
       emoji: "🎓",
@@ -49,7 +48,6 @@ export const Educations = () => {
           className="mx-auto"
           width={42}
           height={42}
-          priority
         />
       ),
       emoji: "🇰🇷",
@@ -71,7 +69,6 @@ export const Educations = () => {
           className="mx-auto"
           width={42}
           height={42}
-          priority
         />
       ),
       emoji: "📚",

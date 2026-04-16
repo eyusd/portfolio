@@ -1,7 +1,7 @@
 {
   "Metadata": {
     "title": "Clément Chardine",
-    "description": "Das bin ich!"
+    "description": "Software-Ingenieur und Tech Lead in Paris. Derzeit Entwicklungsleiter bei Eledone, ehemaliger CTO bei Sniive. Absolvent der CentraleSupélec."
   },
   "About": {
     "code": "Ich schreibe Code seit meiner Jugend und habe eigentlich nie damit aufgehört. Aktuell leite ich die Technik bei <eledonelink>Eledone</eledonelink>, wo ich die B2B-Vertriebsadministration mit KI automatisiere. Zuvor habe ich als CTO <sniivelink>Sniive</sniivelink> mitgegründet, eine SaaS-Plattform zur Prozessdokumentation in Rust, inkubiert bei Station F. Darüber hinaus habe ich bei <cedelink>CEDE Labs</cedelink> Chrome-Erweiterungen und Entwickler-APIs gebaut und bei <wanderlink>Wandercraft</wanderlink> Diagnose-Tools für medizinische Exoskelette entwickelt.",
