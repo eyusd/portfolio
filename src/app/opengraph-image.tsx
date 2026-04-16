@@ -11,6 +11,14 @@ export const size = {
 export const contentType = 'image/png';
 
 export default async function Image() {
+  const interBold = await fetch(
+    'https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuFuYAZJhiJ-Ek-_EeA.woff'
+  ).then((res) => res.arrayBuffer());
+
+  const interRegular = await fetch(
+    'https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZJhiJ-Ek-_EeA.woff'
+  ).then((res) => res.arrayBuffer());
+
   return new ImageResponse(
     (
       <div
@@ -23,6 +31,7 @@ export default async function Image() {
           justifyContent: 'center',
           padding: '80px',
           gap: '48px',
+          fontFamily: '"Inter"',
         }}
       >
         {/* CC badge */}
@@ -36,7 +45,6 @@ export default async function Image() {
             borderRadius: '20px',
             background: '#0F2A2D',
             border: '2px solid #1E4A50',
-            fontFamily: 'sans-serif',
             fontSize: 44,
             fontWeight: 700,
             color: '#F0F8F9',
@@ -91,6 +99,20 @@ export default async function Image() {
     ),
     {
       ...size,
+      fonts: [
+        {
+          name: 'Inter',
+          data: interRegular,
+          style: 'normal',
+          weight: 400,
+        },
+        {
+          name: 'Inter',
+          data: interBold,
+          style: 'normal',
+          weight: 700,
+        },
+      ],
     }
   );
 }
