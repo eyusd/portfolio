@@ -4,32 +4,39 @@ import fs from 'fs';
 import path from 'path';
 
 const baseUrl = 'https://chardine.fr';
+const defaultLocale = 'en';
+
+// With localePrefix: 'as-needed', the default locale has no prefix
+function localeUrl(locale: string, suffix = '') {
+  const prefix = locale === defaultLocale ? '' : `/${locale}`;
+  return `${baseUrl}${prefix}${suffix}`;
+}
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const currentDate = new Date();
 
-  // Generate locale-specific homepage entries
+  // Homepage entries — English is at /, others at /fr, /zh, etc.
   const homepages = locales.map((locale) => ({
-    url: `${baseUrl}/${locale}`,
+    url: localeUrl(locale),
     lastModified: currentDate,
     changeFrequency: 'monthly' as const,
-    priority: 1,
+    priority: locale === defaultLocale ? 1 : 0.9,
     alternates: {
       languages: Object.fromEntries(
-        locales.map((l) => [l, `${baseUrl}/${l}`])
+        locales.map((l) => [l, localeUrl(l)])
       ),
     },
   }));
 
-  // Generate locale-specific lab page entries
+  // Lab page entries
   const labPages = locales.map((locale) => ({
-    url: `${baseUrl}/${locale}/lab`,
+    url: localeUrl(locale, '/lab'),
     lastModified: currentDate,
     changeFrequency: 'weekly' as const,
     priority: 0.8,
     alternates: {
       languages: Object.fromEntries(
-        locales.map((l) => [l, `${baseUrl}/${l}/lab`])
+        locales.map((l) => [l, localeUrl(l, '/lab')])
       ),
     },
   }));
@@ -37,7 +44,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Dynamically get all articles from the articles directory
   const articlesDir = path.join(process.cwd(), 'src/app/[locale]/lab/articles');
   let articles: string[] = [];
-  
+
   if (fs.existsSync(articlesDir)) {
     const files = fs.readdirSync(articlesDir);
     articles = files
@@ -45,16 +52,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
       .map((file) => file.replace(/\.mdx$/, ''));
   }
 
-  // Generate article entries with all locales
+  // Article entries per locale
   const articlePages = articles.flatMap((slug) =>
     locales.map((locale) => ({
-      url: `${baseUrl}/${locale}/lab/${slug}`,
+      url: localeUrl(locale, `/lab/${slug}`),
       lastModified: currentDate,
       changeFrequency: 'monthly' as const,
       priority: 0.6,
       alternates: {
         languages: Object.fromEntries(
-          locales.map((l) => [l, `${baseUrl}/${l}/lab/${slug}`])
+          locales.map((l) => [l, localeUrl(l, `/lab/${slug}`)])
         ),
       },
     }))
