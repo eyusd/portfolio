@@ -10,15 +10,7 @@ export const size = {
 
 export const contentType = 'image/png';
 
-export default async function Image() {
-  const interBold = await fetch(
-    'https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuFuYAZJhiJ-Ek-_EeA.woff'
-  ).then((res) => res.arrayBuffer());
-
-  const interRegular = await fetch(
-    'https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZJhiJ-Ek-_EeA.woff'
-  ).then((res) => res.arrayBuffer());
-
+export default function Image() {
   return new ImageResponse(
     (
       <div
@@ -31,7 +23,6 @@ export default async function Image() {
           justifyContent: 'center',
           padding: '80px',
           gap: '48px',
-          fontFamily: '"Inter"',
         }}
       >
         {/* CC badge */}
@@ -72,7 +63,7 @@ export default async function Image() {
               lineHeight: 1.1,
             }}
           >
-            Clément Chardine
+            Clement Chardine
           </div>
           <div
             style={{
@@ -97,22 +88,6 @@ export default async function Image() {
         </div>
       </div>
     ),
-    {
-      ...size,
-      fonts: [
-        {
-          name: 'Inter',
-          data: interRegular,
-          style: 'normal',
-          weight: 400,
-        },
-        {
-          name: 'Inter',
-          data: interBold,
-          style: 'normal',
-          weight: 700,
-        },
-      ],
-    }
+    size
   );
 }

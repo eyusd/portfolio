@@ -5,5 +5,5 @@ export default createMiddleware(routing);
  
 export const config = {
   // Match all paths except Next.js internals and static files
-  matcher: ['/((?!_next|_vercel|.*\\..*).*)']
+  matcher: ['/((?!_next|_vercel|opengraph-image|.*\\..*).*)']
 };

@@ -23,14 +23,6 @@ export const metadata = {
     description: 'Software engineer. Tech Lead at Eledone, former CTO at Sniive. Based in Paris, France.',
     url: '/',
     siteName: 'Clément Chardine Portfolio',
-    images: [
-      {
-        url: '/opengraph-image.png',
-        width: 1200,
-        height: 630,
-        alt: 'Clément Chardine Portfolio',
-      },
-    ],
     locale: 'en_US',
     type: 'website',
   },
@@ -38,7 +30,6 @@ export const metadata = {
     card: 'summary_large_image',
     title: 'Clément Chardine | Software Engineer',
     description: 'Software engineer. Tech Lead at Eledone, former CTO at Sniive.',
-    images: ['/opengraph-image.png'],
   },
   robots: {
     index: true,
@@ -58,5 +49,9 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return children;
+  return (
+    <html>
+      <body>{children}</body>
+    </html>
+  );
 }
