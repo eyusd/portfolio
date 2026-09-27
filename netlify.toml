@@ -19,6 +19,52 @@
   to = "/ko/:splat"
   status = 301
 
+# `/fr` and `/lab` are files (fr.html, lab.html) that sit next to folders of the same name: say so explicitly.
+[[redirects]]
+  from = "/lab"
+  to = "/lab.html"
+  status = 200
+[[redirects]]
+  from = "/fr"
+  to = "/fr.html"
+  status = 200
+[[redirects]]
+  from = "/de"
+  to = "/de.html"
+  status = 200
+[[redirects]]
+  from = "/es"
+  to = "/es.html"
+  status = 200
+[[redirects]]
+  from = "/zh"
+  to = "/zh.html"
+  status = 200
+[[redirects]]
+  from = "/ko"
+  to = "/ko.html"
+  status = 200
+[[redirects]]
+  from = "/fr/lab"
+  to = "/fr/lab.html"
+  status = 200
+[[redirects]]
+  from = "/de/lab"
+  to = "/de/lab.html"
+  status = 200
+[[redirects]]
+  from = "/es/lab"
+  to = "/es/lab.html"
+  status = 200
+[[redirects]]
+  from = "/zh/lab"
+  to = "/zh/lab.html"
+  status = 200
+[[redirects]]
+  from = "/ko/lab"
+  to = "/ko/lab.html"
+  status = 200
+
 # Fingerprinted build output never changes.
 [[headers]]
   for = "/_astro/*"
