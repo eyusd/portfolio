@@ -417,16 +417,17 @@ function layout() {
   lastW = W;
 }
 
-export async function start() {
+let still = false;
+export async function start(reduced = false) {
+  still = reduced;
   await document.fonts.load(font(15)).catch(() => {});
   for (const el of focusables) {
     winTexts[el.dataset.logo!] = JSON.parse(el.dataset.win || '[]');
     paneTexts[el.dataset.logo!] = el.dataset.logo === 'me' ? aboutEl?.textContent ?? '' : (el.querySelector(':scope > div')?.textContent ?? '');
   }
-  layout();
-  if (pc) { await loadLogo('me'); pane.cells = cellsOf(paneTexts.me ?? ''); }
-  document.documentElement.classList.add('fx');
-  aboutEl?.classList.add('pouring');
+  if (still) { measure(); sizePane(); lastW = W; } else layout();
+  if (pc) { await loadLogo('me'); pane.cells = cellsOf(paneTexts.me ?? ''); pane.born = -1e3; }
+  if (!still) { document.documentElement.classList.add('fx'); aboutEl?.classList.add('pouring'); }
 
   addEventListener('pointermove', (e) => {
     if (e.pointerType === 'touch') return;
@@ -443,6 +444,7 @@ export async function start() {
   }
   addEventListener('scroll', focusFromScroll, { passive: true });
   addEventListener('resize', () => {
+    if (still) { measure(); sizePane(); return; }
     const w = W;
     measure();
     if (Math.abs(w - W) < 2) { // height-only (mobile URL bar): keep everything, just re-read the paragraph
@@ -453,7 +455,7 @@ export async function start() {
   // a keyboard user tabbing into the paragraph gets it immediately
   aboutEl?.addEventListener('focusin', () => { if (!poured) scrollTo({ top: Math.max(scrollY, pourDist), behavior: 'instant' }); });
   // content above can move (fonts, an opened entry): re-read the geometry, re-sample the name only if it moved
-  new ResizeObserver(() => {
+  if (!still) new ResizeObserver(() => {
     if (W !== lastW) return;
     if (aboutEl) slots = charBoxes(aboutEl).filter((c) => c.ch !== '\n');
     const b = nameEl.getBoundingClientRect();
@@ -463,10 +465,12 @@ export async function start() {
 
   let last = performance.now();
   const frame = (now: number) => {
-    const dt = clamp((now - last) / 1000, 0, 0.05); last = now; t += dt;
+    const dt = clamp((now - last) / 1000, 0, 0.05); last = now;
+    if (!still) t += dt;
     if (!pane.drag && Math.abs(pane.yaw) > 0.001) pane.yaw *= 0.97;
     sy = scrollY;
-    drawParticles();
+    if (!still) drawParticles();
+    if (still) { pane.morph = 1; pane.born = t - 10; }
     renderPane();
     requestAnimationFrame(frame);
   };

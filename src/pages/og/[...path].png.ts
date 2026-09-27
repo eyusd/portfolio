@@ -8,7 +8,7 @@ import { PERSON, profile } from '../../data/profile';
 import { article, slugs, translationsOf } from '../../data/lab';
 import emoji from '../../data/pixel-emoji.json';
 
-type Card = { locale: Locale; kicker: string; title: string; text: string; url: string; emoji?: string; big?: boolean };
+type Card = { locale: Locale; kicker: string; title: string; text: string; url: string; emoji?: string; big?: boolean; fallback?: Card };
 
 export function getStaticPaths() {
   return locales.flatMap((locale) => {
@@ -22,6 +22,11 @@ export function getStaticPaths() {
       cards.push({ params: { path: `${locale}/lab/${slug}` }, props: { locale, kicker: `${t(locale, 'lab')} · ${a.entry.data.date.toISOString().slice(0, 10)}`, title: a.entry.data.title, text: a.entry.data.description, url: 'chardine.fr' + localePath(locale, `/lab/${slug}`), emoji: a.entry.data.emoji } });
     }
     return cards;
+  }).map((c, _i, all) => {
+    // Chinese and Korean cards need a web font fetched at build time; if that ever fails, fall back to English
+    if (c.props.locale !== 'zh' && c.props.locale !== 'ko') return c;
+    const en = all.find((x) => x.params.path === c.params.path.replace(/^\w+/, 'en'));
+    return { ...c, props: { ...c.props, fallback: en?.props } };
   });
 }
 
@@ -29,14 +34,14 @@ const root = process.cwd();
 const geist = Promise.all([400, 700].map((w) => fs.readFile(path.join(root, 'assets-src/fonts', `GeistMono-${w}.ttf`))));
 
 /** A subset of Noto Sans with just the characters a card needs, cached between builds. */
-async function cjkFont(family: string, text: string) {
+async function cjkFont(family: string, text: string, weight: 400 | 700) {
   const chars = [...new Set(text)].filter((c) => c.charCodeAt(0) > 0x2e80).join('');
   if (!chars) return null;
   const dir = path.join(root, 'node_modules/.cache/og-fonts');
-  const file = path.join(dir, `${family.replace(/\W/g, '')}-${Buffer.from(chars).toString('base64url').slice(0, 40)}-${chars.length}.ttf`);
+  const file = path.join(dir, `${family.replace(/\W/g, '')}-${weight}-${Buffer.from(chars).toString('base64url').slice(0, 40)}-${chars.length}.ttf`);
   try { return await fs.readFile(file); } catch {}
   try {
-    const cssText = await (await fetch(`https://fonts.googleapis.com/css2?family=${family.replace(/ /g, '+')}:wght@700&text=${encodeURIComponent(chars)}`)).text();
+    const cssText = await (await fetch(`https://fonts.googleapis.com/css2?family=${family.replace(/ /g, '+')}:wght@${weight}&text=${encodeURIComponent(chars)}`)).text();
     const url = /src: url\((.+?)\)/.exec(cssText)?.[1];
     if (!url) return null;
     const buf = Buffer.from(await (await fetch(url)).arrayBuffer());
@@ -49,13 +54,15 @@ const C = { bg: '#040f11', card: '#071618', fg: '#f7f8f8', muted: '#8a9da1', bor
 const h = (type: string, style: Record<string, unknown>, children?: unknown) => ({ type, props: { style, children } });
 
 export const GET: APIRoute = async ({ props }) => {
-  const c = props as Card;
+  let c = props as Card;
   const [g400, g700] = await geist;
   const fonts: { name: string; data: Buffer; weight: 400 | 700 }[] = [{ name: 'Geist Mono', data: g400!, weight: 400 }, { name: 'Geist Mono', data: g700!, weight: 700 }];
   const all = c.kicker + c.title + c.text + c.url;
-  for (const fam of c.locale === 'ko' ? ['Noto Sans KR'] : c.locale === 'zh' ? ['Noto Sans SC'] : []) {
-    const data = await cjkFont(fam, all);
-    if (data) fonts.push({ name: fam, data, weight: 700 }, { name: fam, data, weight: 400 });
+  const fam = c.locale === 'ko' ? 'Noto Sans KR' : c.locale === 'zh' ? 'Noto Sans SC' : null;
+  if (fam) {
+    const [bold, regular] = await Promise.all([cjkFont(fam, all, 700), cjkFont(fam, all, 400)]);
+    if (bold && regular) fonts.push({ name: fam, data: bold, weight: 700 }, { name: fam, data: regular, weight: 400 });
+    else if (c.fallback) c = c.fallback;
   }
   const family = `Geist Mono, ${fonts.filter((f) => f.name !== 'Geist Mono').map((f) => f.name).join(', ')}`;
   const titleSize = c.big ? 92 : c.title.length > 48 ? 50 : 60;

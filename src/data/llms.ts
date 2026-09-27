@@ -28,7 +28,7 @@ export function llmsTxt() {
 
 > ${p.description} ${p.subtitle}
 
-${PERSON.name} is a ${p.title.toLowerCase()} based in ${p.location}. This site is his portfolio (CV: experience, education) and "Lab", a collection of experiments and write-ups. It is available in ${locales.map((l) => localeMeta[l].name).join(', ')}; English is the original.
+${PERSON.name} is a ${p.title.toLowerCase()} based in ${p.location}. This site is Clément’s portfolio (CV: experience, education) and "Lab", a collection of experiments and write-ups. It is available in ${locales.map((l) => localeMeta[l].name).join(', ')}; English is the original.
 
 ## Profile
 

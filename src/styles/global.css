@@ -1,3 +1,4 @@
+@import './emoji.css';
 @font-face {
   font-family: 'Geist Mono';
   src: url('../assets/fonts/geist-mono.woff2') format('woff2');
@@ -120,7 +121,7 @@ a:hover .arrow, a:focus-visible .arrow { transform: translate(2px, -2px) }
 .pill { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; line-height: 1; padding: 5px 9px; border: 1px solid var(--border); border-radius: 999px; color: var(--muted);
   transition: border-color .2s, color .2s }
 .pill:hover { border-color: var(--primary); color: var(--fg) }
-.px { width: 12px; height: 12px; image-rendering: pixelated; flex: none; background: center / contain no-repeat; display: inline-block }
+.px { width: 12px; height: 12px; image-rendering: pixelated; flex: none; display: inline-block; background-repeat: no-repeat }
 .px.lead { width: 15px; height: 15px; margin-right: 9px; vertical-align: -2px; transition: transform .25s }
 .entry:hover .px.lead { transform: translateY(-2px) }
 .refs { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 12px }
@@ -147,6 +148,11 @@ aside.side { position: relative }
 .win-foot { border-top: 1px solid var(--border); font-size: 11px }
 .win-head b { color: var(--fg); font-weight: 500 }
 #pane { display: block; width: 100%; height: 400px; touch-action: none }
+
+/* without JavaScript there is nothing to draw the window or run the game */
+html:not(.js) aside.side, html:not(.js) .dino { display: none }
+html:not(.js) .grid { grid-template-columns: 1fr }
+html:not(.js) .col { max-width: 760px }
 
 /* ── dino ────────────────────────────────────────────────────────────── */
 .dino { margin: 54px 0 8px }

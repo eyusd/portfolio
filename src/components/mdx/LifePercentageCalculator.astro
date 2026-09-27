@@ -20,7 +20,7 @@ const w = widgets[localeFromPath(Astro.url.pathname)];
       <p class="lp-date"></p>
       <p class="lp-age"></p>
       <div class="lp-actions">
-        <a class="btn lp-gcal" target="_blank" rel="noopener">{w.lpGoogle} <span aria-hidden="true">↗</span></a>
+        <button class="btn lp-gcal" type="button">{w.lpGoogle} <span aria-hidden="true">↗</span></button>
         <button class="btn lp-ics" type="button">{w.lpIcs}</button>
       </div>
     </div>
@@ -49,7 +49,7 @@ const w = widgets[localeFromPath(Astro.url.pathname)];
     const fmt = new Intl.DateTimeFormat(lang, { dateStyle: 'long', timeZone: 'UTC' });
     const pctFmt = new Intl.NumberFormat(lang, { style: 'percent' });
     const ymd = (d: Date) => d.toISOString().slice(0, 10).replace(/-/g, '');
-    let target: Date | null = null;
+    let target: Date | null = null, gcal = '';
 
     function update() {
       const p = Number(pct.value) / 100;
@@ -66,10 +66,11 @@ const w = widgets[localeFromPath(Astro.url.pathname)];
       $('.lp-date').textContent = fmt.format(target);
       $('.lp-age').textContent = s.lpAge!.replace('{age}', age.toLocaleString(lang, { maximumFractionDigits: 1 }));
       const next = new Date(target.getTime() + 864e5), title = s.lpEvent!.replace('{p}', String(pct.value));
-      $<HTMLAnchorElement>('.lp-gcal').href = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${ymd(target)}/${ymd(next)}`;
+      gcal = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${ymd(target)}/${ymd(next)}`;
     }
     form.addEventListener('input', update);
     form.addEventListener('submit', (e) => e.preventDefault());
+    $('.lp-gcal').addEventListener('click', () => { if (gcal) open(gcal, '_blank', 'noopener'); });
     $('.lp-ics').addEventListener('click', () => {
       if (!target) return;
       const title = s.lpEvent!.replace('{p}', String(pct.value)), next = new Date(target.getTime() + 864e5);
