@@ -1,0 +1,53 @@
+---
+title: "Resolver el juego «Make 10» por fuerza bruta"
+description: "Un pequeño proyecto para resolver por fuerza bruta el acertijo «Make 10» con cada número de 4 cifras (0000–9999): las reglas, las operaciones permitidas y los resultados del solucionador."
+date: 2025-11-23
+emoji: "🔢"
+tags: ["Algoritmos", "Acertijo"]
+---
+
+Hace poco me topé con un short de YouTube o Instagram en el que alguien intentaba resolver el **[Sydney Train Game](https://en.wikipedia.org/wiki/24_(puzzle))**. La idea es sencilla: tomar las cuatro cifras del número del vagón y combinarlas con operaciones aritméticas básicas hasta llegar a 24. Probé algunos ejemplos, pero casi todos eran muy fáciles. Así que quería algo más difícil.
+
+Para complicarlo, cambié el objetivo de 24 a **10**, que tiene menos divisores, y me limité a operaciones **ordenadas** (es decir, sin reordenar las cifras). Seguro que no soy el primero en pensar en esta variante, pero a falta de un nombre mejor, la llamaré el juego «Make 10».
+
+Me tuvo dándole vueltas un buen rato, pero, como buen desarrollador, obviamente tuve que dedicar tiempo a automatizar la solución.
+
+El resultado es un solucionador por fuerza bruta que explora todas las combinaciones posibles de operaciones para llegar a 10 con cada entrada de 4 cifras (de `0000` a `9999`). Abajo explico las reglas que me puse, las operaciones que permití y comparto los resultados del solucionador.
+
+## Las reglas
+
+El objetivo es siempre **10**.
+La entrada es una cadena de 4 cifras.
+El orden es inmutable.
+Hay que usar las cuatro cifras exactamente una vez.
+
+## Las operaciones
+
+Quería que el acertijo siguiera siendo difícil, pero con solución.
+
+Para respetar el espíritu del juego original, me limité a operaciones que se pueden leer sin ambigüedad de izquierda a derecha (por eso la división se escribe con una barra, de forma poco convencional).
+
+Para que fuera interesante (y resoluble), tuve que ampliar el conjunto estándar de operadores. La aritmética básica no basta para cubrir el espacio de búsqueda, pero tampoco quería permitir una complejidad infinita.
+
+Permití las siguientes operaciones:
+
+*   **Estándar:** [suma](https://es.wikipedia.org/wiki/Suma), [resta](https://es.wikipedia.org/wiki/Resta), [multiplicación](https://es.wikipedia.org/wiki/Multiplicaci%C3%B3n), [división](https://es.wikipedia.org/wiki/Divisi%C3%B3n_(matem%C3%A1tica)).
+*   **Potencias y raíces:** [potenciación](https://es.wikipedia.org/wiki/Potenciaci%C3%B3n), [raíz cuadrada](https://es.wikipedia.org/wiki/Ra%C3%ADz_cuadrada) y [raíz enésima](https://es.wikipedia.org/wiki/Radicaci%C3%B3n).
+*   **Funciones:** [logaritmos](https://es.wikipedia.org/wiki/Logaritmo), [factoriales](https://es.wikipedia.org/wiki/Factorial), [módulo](https://es.wikipedia.org/wiki/Operaci%C3%B3n_m%C3%B3dulo) y [valor absoluto](https://es.wikipedia.org/wiki/Valor_absoluto).
+*   **El operador triangular:** incluí el número triangular, representado aquí con la notación de Knuth como `?` (por ejemplo, `3?` = 6). Puedes leer más [aquí](https://es.wikipedia.org/wiki/N%C3%BAmero_triangular).
+
+Sé que algunas de estas operaciones (como los factoriales o los logaritmos) pueden parecer un poco «trampa» en un simple juego de aritmética. Aun así, añaden una capa de complejidad interesante y abren más caminos para llegar al objetivo. En mis primeros intentos, alrededor del 10 % de las entradas no tenían solución solo con aritmética básica, así que estas operaciones adicionales eran necesarias para cubrir muchas más.
+
+A continuación está la lista completa, exportada, de las soluciones que encontró el solucionador para cada entrada de 4 cifras. La lista interactiva muestra la expresión más sencilla encontrada para cada una.
+
+<Make10List />
+
+## La implementación
+
+El código en sí no tiene nada de revolucionario. Es una búsqueda en profundidad por fuerza bruta que construye un árbol de expresiones. El mayor reto no fueron las matemáticas, sino los límites de la máquina.
+
+1.  **Terminación:** anidar factoriales y números triangulares provoca desbordamientos enseguida. Tuve que limitar la profundidad de búsqueda de forma agresiva para que el código no siguiera ejecutándose hasta la muerte térmica del universo.
+2.  **Formato:** dediqué una cantidad de tiempo poco razonable a pelearme con LaTeX para que el resultado no pareciera una sopa de ASCII.
+3.  **Heurísticas:** no quería *una* solución, quería la *más sencilla*. Ponderé el solucionador para que prefiriera la aritmética básica (`+`, `-`) frente a las «armas de destrucción masiva», como el operador triangular o las raíces anidadas. Solo saca la artillería pesada cuando es absolutamente necesario (o al menos eso intenté).
+
+Y si encuentras alguna, me encantaría ver soluciones más sencillas que no dependan del módulo (`mod`) ni del operador triangular (`?`); compártelas y las incorporaré.

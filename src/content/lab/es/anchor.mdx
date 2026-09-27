@@ -1,0 +1,100 @@
+---
+title: "Creé una mascota de escritorio que me pide que deje de gritarle a mi IA"
+description: "Cómo un fin de semana de Rust, FFI de macOS a pelo y ML en el dispositivo se convirtió en un pequeño compañero que vigila tu tono"
+date: 2026-04-12
+emoji: "😾"
+tags: ["Rust", "macOS", "ML"]
+---
+
+Mi trabajo ha cambiado. Ya casi no escribo código. Escribo prompts, reviso, dirijo y, de vez en cuando, suplico. La ingeniería de software en 2026 va menos de algoritmos y más de gestionar un ejército de becarios que resultan ser grandes modelos de lenguaje. A veces los becarios son brillantes. A veces uno de ellos quema el 20 % de mi límite diario de tokens explorando la codebase por centésima vez cuando le dije explícitamente que refactorizara *una función concreta*.
+
+Y cuando eso pasa, quizá estoy cansado, quizá hay un bug en producción, quizá llevo horas con ello, el caso es que exploto. Escribo cosas que nunca le diría a un compañero. Eso sí, intento ser creativo: «¡Maldito neandertal!», «¡¡¡¡¡Mato a tu perro si vuelves a tocar una sola línea de esa función!!!!!», «Montón de chatarra inútil...».
+
+Solo es una máquina que predice palabras en una pantalla, ¿no? No pasa nada.
+
+Salvo que hay un bucle de retroalimentación. Los modelos de IA se entrenan con datos, y unos datos que parecen un jefe tiránico gritando a un empleado mal pagado encajan con el patrón de... el trabajo de un empleado mal pagado al que le gritan. Que no es muy buen código. Así que ser cruel con tu IA podría, literalmente, empeorarla. Y más allá de ese argumento práctico, sencillamente no quería verme convertido en esa persona. La que es borde con el camarero porque el camarero no puede defenderse.
+
+<Callout variant="insight" label="Idea clave">
+Ser cruel con tu IA podría, literalmente, empeorarla. La toxicidad encaja con el patrón de alguien al que le gritan, y eso no da buen código.
+</Callout>
+
+Así que quería un empujoncito. No una ventana emergente. No un «¿estás seguro?» que todo el mundo acepta más rápido que «acepto los términos y condiciones». Algo vivo. Algo que te haga *sentir* algo a cambio.
+
+## La idea
+
+Llevo años siendo nostálgico. Crecí en la época de Rainmeter: widgets de escritorio, skins personalizadas, pequeñas criaturas que vivían en la barra de tareas. Recuerdo vagamente un plugin (cuyo nombre se ha perdido en el tiempo) que ponía los duendecillos del hollín de *El viaje de Chihiro* en la pantalla. Los Tamagotchis. Todo ese ambiente.
+
+Así que el concepto era sencillo: un diminuto compañero en pixel art que vive en tu pantalla, lee lo que escribes y reacciona. Palabras amables, cara feliz. Palabras duras, cara triste. Palabras muy duras, y bloquea tu tecla Intro y te da un segundo para pensarlo mejor. Imagina a Clippy, si Clippy tuviera sentimientos y mejor criterio.
+
+Justo por entonces leí [un artículo sobre cómo Grammarly se engancha a macOS](https://lifetips.alibaba.com/tech-efficiency/grammarly-checks-your-spelling-and-grammar-as-you-type) para leer lo que escribes en todo el sistema. Si Grammarly puede con la gramática, algo parecido puede con el *tono*. En el dispositivo, privado, sin que ningún dato salga de la máquina. La semilla estaba plantada.
+
+El nombre salió solo: <Glyph>安</Glyph>**chor**. 安 (*ān*) es el carácter chino de la paz, y «anchor» (ancla), porque la idea es mantener los pies en la tierra. El otro candidato era «fr:3nd», que descarté por ser demasiado otaku y por compartir nombre con una startup de IA que me cae fatal.
+
+<LabImage name="anchor-icon" alt="El icono de la aplicación [安]chor" width={128} />
+
+## Las reglas
+
+Me puse algunas restricciones antes de empezar:
+
+- **Un fin de semana.** Nada de ampliar el alcance. (Se amplió igualmente, pero solo un poco.)
+- **Rust.** No lo tocaba desde [Sniive](https://www.sniive.com), una startup basada en Tauri en la que trabajé hace año y medio. Quería practicar, y quería las garantías de rendimiento: esto tiene que funcionar en silencio en segundo plano en todas las aplicaciones sin agotar la batería.
+- **Nada de Swift.** Sí, habría sido más fácil para macOS. No, esa no era la idea.
+- **Mantenerlo pequeño.** Un daemon, no una aplicación de Electron. Sin framework, sin web view. Solo el binario, el modelo y la pantalla.
+
+## Cómo funciona
+
+La aplicación intercepta tus pulsaciones de teclado a nivel global. Sí, técnicamente es un keylogger. Pero todo se queda en tu máquina (sin llamadas de red, sin telemetría, nada sale del dispositivo, salvo la descarga de los modelos y la comprobación de actualizaciones). Las pulsaciones pasan a un clasificador de toxicidad que se ejecuta en [CoreML](https://developer.apple.com/documentation/coreml), que actualiza en tiempo real el estado de ánimo de un diminuto compañero en pixel art.
+
+<ArchitectureDiagram />
+
+El compañero es un sprite de 32×32 del [Sprout Lands UI Pack](https://cupnooble.itch.io/sprout-lands-ui-pack) de Cup Nooble. (Encontrar buenas spritesheets en 2026 es *mucho* más difícil que hace diez años, cuando trasteaba con RPG Maker. La edad de oro de los packs de pixel art ya pasó.) Se coloca junto a tu campo de texto activo, sonríe cuando eres amable, se preocupa cuando te vas calentando y se enfada visiblemente cuando eres cruel.
+
+Si pulsas Intro sobre algo que el modelo considera tóxico, la pulsación se bloquea. El pequeño compañero muestra su disgusto. Haces una pausa. Lo reformulas.
+
+O pulsas Opción+Intro para saltártelo y enviarlo igualmente, porque a veces lo decías en serio.
+
+Bloquear con Intro era la elección obvia. Soy desarrollador, lo envío todo con Intro. Sin gestos complicados, sin diálogo de confirmación, solo: tu compañero te ha pillado.
+
+Cuando dejas de escribir unos minutos, el compañero se duerme, con una pequeña animación de respiración incluida. Se despierta con la siguiente pulsación. Si llevas un rato siendo amable, se pone gafas de sol. Detalles pequeños, pero hacen que se sienta menos como un widget y más como una criatura.
+
+## El sueño de Grammarly frente a la realidad
+
+Aquí es donde la ambición se encuentra con la fecha límite.
+
+El artículo de Grammarly describía cómo extraer el texto de cualquier aplicación mediante las API de accesibilidad de macOS. El sueño era evidente: leer el campo de texto completo, saber exactamente qué pone, localizar la parte tóxica, sugerir una versión reformulada. Como Grammarly, pero para el tono.
+
+Pero Grammarly tiene un equipo de ingenieros y años de iteración. En un fin de semana, descubres cosas. Como que no todas las aplicaciones de macOS exponen bien sus atributos de accesibilidad. Algunas mienten sobre sus roles de interfaz. Otras no exponen su contenido de texto en absoluto. ¿Extraer de forma fiable el contenido completo de cualquier campo de texto en cualquier aplicación? Eso requiere un montón de heurísticas específicas para cada aplicación que sencillamente no tenía tiempo de escribir.
+
+Así que cambié de enfoque. En lugar de leer el campo de texto, sigo directamente las pulsaciones y reconstruyo lo que puedo. Cada pulsación va a una estructura de datos de tipo [rope](https://en.wikipedia.org/wiki/Rope_(data_structure)) (porque los usuarios borran, saltan de un lado a otro, pulsan Cmd+A y, en general, se comportan como agentes del caos en sus propios campos de texto). El resultado es una aproximación razonable de lo que está escrito de verdad. Le paso al modelo los últimos 512 caracteres: no tiene sentido penalizar a alguien por una cita tóxica que recibió de otra persona tres párrafos más arriba.
+
+No es perfecto. Hay falsos positivos. Falsos negativos también. Pero funciona la mayor parte del tiempo, y «la mayor parte del tiempo» basta para un empujoncito.
+
+El modelo en sí es un [clasificador de toxicidad DistilBERT multilingüe](https://huggingface.co/gravitee-io/distilbert-multilingual-toxicity-classifier), convertido a CoreML. Pesa unos 240 MB, así que se descarga en el primer arranque y se guarda en caché. La inferencia se ejecuta en el Apple Neural Engine cuando está disponible. Dos caminos: síncrono cuando pulsas Intro (unos 100 ms para decidir si bloquear) y continuo en segundo plano mientras escribes (el estado de ánimo del compañero se actualiza con una media móvil exponencial que reacciona más rápido a los picos que a la calma, porque es más útil avisarte rápido que perdonarte rápido).
+
+## Rust en macOS en 2026
+
+Valoración sincera: está bien. Ni genial ni terrible.
+
+La familia de crates [`objc2`](https://docs.rs/objc2/latest/objc2/) ha madurado mucho. Ventanas, menús, paneles, iconos en la barra de estado... todo eso funciona sin más. Pero en cuanto necesitas algo un poco fuera del camino trillado (captura global de eventos, observadores de accesibilidad, integración con CoreML), estás solo, escribiendo FFI a pelo contra las API en C de Apple. Eso sí, vivimos en una época en la que los agentes de IA son muy buenos iterando, así que, con algo de prompting, conseguí que funcionaran los bindings necesarios.
+
+La ventaja que hace que todo merezca la pena: el binario final pesa **3 MB**. Con LTO, `panic = abort` y `strip = true`, toda la aplicación (daemon, pipeline de inferencia de ML, renderizado de sprites por GPU, ventana de ajustes) compila en algo más pequeño que la imagen de cabecera de la mayoría de webs de marketing. Arranca al instante. Funciona en silencio. No hay runtime.
+
+Además, y de verdad que no me lo esperaba, la arquitectura multihilo resultó muy agradable en Rust. La captura de pulsaciones, la inferencia de ML, la monitorización de accesibilidad y el renderizado de la interfaz se ejecutan en paralelo, coordinados con [`crossbeam-channel`](https://docs.rs/crossbeam-channel/latest/crossbeam_channel/). Me costó un tiempo dejarlo bien, pero el resultado no se siente lento ni a trompicones, casi nunca.
+
+El verdadero dolor no es Rust. Es Apple. Distribuir una aplicación de macOS fuera de la App Store en 2026 significa que tus usuarios tienen que hacer clic derecho → Abrir para esquivar Gatekeeper en el primer arranque. Un certificado Developer ID para evitarlo cuesta 99 $ al año. Para un proyecto de fin de semana gratuito y de código abierto, es un trago amargo. El bundle `.app` lo monta un [script de shell](https://github.com/eyusd/an.chor/blob/main/bundle.sh), porque no existe un `cargo bundle` que haga lo que necesito. Funciona, que es lo único que me importa.
+
+## ¿Funciona de verdad?
+
+Sí. No porque el modelo de ML sea perfecto, sino porque la fricción basta.
+
+Ver al pequeño compañero triste cuando escribo algo duro me hace parar de verdad. Lo reformulo. Respiro. El hecho de pulsar Opción+Intro para saltármelo, de elegir *conscientemente* enviarlo igualmente, ya es en sí un momento de consciencia que antes no existía. La mayoría de las veces no me lo salto: simplemente lo reformulo con más amabilidad.
+
+No va a acabar con la toxicidad en internet. Es una aplicación de Rust de 6.000 líneas hecha en un fin de semana por una persona que estaba molesta consigo misma. Pero funciona conmigo, y quizá funcione con alguien más.
+
+He pensado en añadir un modelo pequeño que sugiera automáticamente una reformulación más amable, pero los modelos actuales siguen siendo demasiado grandes para funcionar de forma continua en segundo plano sin destrozar la batería. Por ahora, el empujoncito basta. No necesitas una máquina que te diga la versión amable: solo necesitas algo que te recuerde que pares y pienses una tú.
+
+---
+
+[安]chor es de código abierto, con licencia MIT, y está disponible en [GitHub](https://github.com/eyusd/an.chor). Si alguna vez escribes cosas de las que te arrepientes, a tu IA, a tus compañeros o a quien sea, quizá valga la pena echarle un vistazo.
+
+Sé amable con todo el que se lo merezca.

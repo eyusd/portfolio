@@ -1,0 +1,53 @@
+---
+title: "Das „Make 10“-Spiel per Brute Force lösen"
+description: "Ein kleines Projekt, das das „Make 10“-Rätsel für jede vierstellige Eingabe (0000–9999) per Brute Force löst: die Regeln, die erlaubten Operationen und die Ergebnisse des Solvers."
+date: 2025-11-23
+emoji: "🔢"
+tags: ["Algorithmen", "Rätsel"]
+---
+
+Neulich bin ich auf ein YouTube- oder Instagram-Short gestoßen, in dem jemand das **[Sydney Train Game](https://en.wikipedia.org/wiki/24_(puzzle))** zu lösen versuchte. Die Idee ist einfach: Man nimmt die vier Ziffern der Waggonnummer und kombiniert sie mit Grundrechenarten, bis 24 herauskommt. Ich habe ein paar Beispiele ausprobiert, aber die meisten waren sehr leicht. Ich wollte also etwas Anspruchsvolleres.
+
+Um es schwieriger zu machen, habe ich das Ziel von 24 auf **10** geändert, das weniger Teiler hat, und mich auf **geordnete** Operationen beschränkt (die Ziffern dürfen also nicht umsortiert werden). Ich bin sicher nicht der Erste mit dieser Variante, aber mangels besseren Namens nenne ich sie das „Make 10“-Spiel.
+
+Es hat mich eine Weile beschäftigt, aber als Entwickler musste ich natürlich Zeit investieren, um die Lösung zu automatisieren.
+
+Das Ergebnis ist ein Brute-Force-Solver, der alle möglichen Kombinationen von Operationen durchprobiert, um für jede vierstellige Eingabe (von `0000` bis `9999`) die 10 zu erreichen. Unten beschreibe ich die Regeln, die erlaubten Operationen und die Ergebnisse des Solvers.
+
+## Die Regeln
+
+Das Ziel ist immer **10**.
+Die Eingabe ist eine vierstellige Zeichenfolge.
+Die Reihenfolge ist fest.
+Alle vier Ziffern müssen genau einmal verwendet werden.
+
+## Die Operationen
+
+Das Rätsel sollte schwierig, aber lösbar bleiben.
+
+Um dem Geist des ursprünglichen Spiels treu zu bleiben, habe ich mich auf Operationen beschränkt, die sich zweifelsfrei von links nach rechts lesen lassen (deshalb wird die Division unüblich mit einem Schrägstrich geschrieben).
+
+Damit es interessant (und lösbar) wird, musste ich den Standardsatz an Operatoren erweitern. Grundrechenarten allein decken den Suchraum nicht ab, aber unendliche Komplexität wollte ich auch nicht zulassen.
+
+Diese Operationen habe ich erlaubt:
+
+*   **Standard:** [Addition](https://de.wikipedia.org/wiki/Addition), [Subtraktion](https://de.wikipedia.org/wiki/Subtraktion), [Multiplikation](https://de.wikipedia.org/wiki/Multiplikation), [Division](https://de.wikipedia.org/wiki/Division_(Mathematik)).
+*   **Potenzen und Wurzeln:** [Potenzieren](https://de.wikipedia.org/wiki/Potenz_(Mathematik)), [Quadratwurzel](https://de.wikipedia.org/wiki/Quadratwurzel) und [n-te Wurzel](https://de.wikipedia.org/wiki/Wurzel_(Mathematik)).
+*   **Funktionen:** [Logarithmen](https://de.wikipedia.org/wiki/Logarithmus), [Fakultäten](https://de.wikipedia.org/wiki/Fakult%C3%A4t_(Mathematik)), [Modulo](https://de.wikipedia.org/wiki/Division_mit_Rest#Modulo) und [Betrag](https://de.wikipedia.org/wiki/Betragsfunktion).
+*   **Der Dreiecksoperator:** Ich habe die Dreieckszahl aufgenommen, hier in Knuths Notation als `?` geschrieben (z. B. `3?` = 6). Mehr dazu [hier](https://de.wikipedia.org/wiki/Dreieckszahl).
+
+Mir ist klar, dass sich manche dieser Operationen (wie Fakultäten oder Logarithmen) in einem einfachen Rechenspiel ein bisschen wie „Schummeln“ anfühlen. Sie fügen aber eine interessante Ebene an Komplexität hinzu und eröffnen mehr Wege zur Zielzahl. Bei meinen ersten Versuchen waren etwa 10 % der Eingaben mit reiner Grundrechnung unlösbar, die zusätzlichen Operationen waren also nötig, um mehr Eingaben abzudecken.
+
+Unten findest du die vollständige, exportierte Liste der Lösungen, die der Solver für jede vierstellige Eingabe gefunden hat. Die interaktive Liste enthält jeweils den einfachsten gefundenen Ausdruck.
+
+<Make10List />
+
+## Die Implementierung
+
+Der Code selbst ist nichts Revolutionäres. Es ist eine Brute-Force-Tiefensuche, die einen Ausdrucksbaum aufbaut. Die größte Herausforderung war nicht die Mathematik, sondern die Grenzen der Maschine.
+
+1.  **Terminierung:** Verschachtelte Fakultäten und Dreieckszahlen führen sehr schnell zu Überläufen. Ich musste die Suchtiefe aggressiv begrenzen, damit der Code nicht bis zum Wärmetod des Universums läuft.
+2.  **Formatierung:** Ich habe unvernünftig viel Zeit damit verbracht, mit LaTeX zu kämpfen, damit die Ausgabe nicht wie ASCII-Suppe aussieht.
+3.  **Heuristiken:** Ich wollte nicht irgendeine Lösung, sondern die *einfachste*. Ich habe den Solver so gewichtet, dass er Grundrechenarten (`+`, `-`) gegenüber „Massenvernichtungswaffen“ wie dem Dreiecksoperator oder verschachtelten Wurzeln bevorzugt. Die schwere Artillerie holt er nur hervor, wenn es wirklich nicht anders geht (zumindest habe ich das versucht).
+
+Und falls du welche findest: Ich würde mich über einfachere Lösungen freuen, die ohne Modulo (`mod`) oder den Dreiecksoperator (`?`) auskommen. Teil sie mit mir, und ich nehme sie auf.

@@ -39,10 +39,10 @@ const boxes: Box[] = [
     <path d="M375,220 L310,280" class="ln b" marker-end="url(#ah-b)" />
     <path d="M475,220 L540,280" class="ln p" marker-end="url(#ah-p)" />
     <path d="M250,305 H210" class="ln dash" marker-end="url(#ah)" />
-    <text x="155" y="75" class="s">chars</text>
-    <text x="325" y="75" class="s">512 chars</text>
-    <text x="530" y="60" class="s i" text-anchor="end">continuous</text>
-    <text x="448" y="148" class="s i">on Enter</text>
+    <text x="155" y="126" class="s">chars</text>
+    <text x="325" y="126" class="s">512 chars</text>
+    <text x="496" y="46" class="s i e">continuous</text>
+    <text x="433" y="144" class="s i st">on Enter</text>
     <text x="320" y="252" class="s b">toxic</text>
     <text x="530" y="252" class="s p">clean</text>
   </svg>
@@ -56,8 +56,9 @@ const boxes: Box[] = [
   .dim { fill: var(--card); stroke: var(--border) }
   .bad { fill: hsl(4 80% 60% / .1); stroke: hsl(4 80% 62%) }
   .t { fill: var(--fg); font-size: 13px; font-weight: 500; text-anchor: middle }
-  .s { fill: var(--muted); font-size: 10.5px; text-anchor: middle }
+  .s { fill: var(--muted); font-size: 9.5px; text-anchor: middle }
   .i { font-style: italic }
+  .e { text-anchor: end } .st { text-anchor: start }
   .ln { fill: none; stroke: var(--muted); stroke-width: 1.4 }
   .dash { stroke-dasharray: 4 3 }
   .head { fill: var(--muted) }

@@ -1,0 +1,100 @@
+---
+title: "Ich habe ein Desktop-Haustier gebaut, das mir sagt, ich soll aufhören, meine KI anzuschreien"
+description: "Wie ein Wochenende mit Rust, rohem macOS-FFI und On-Device-ML zu einem kleinen Begleiter wurde, der auf deinen Ton achtet"
+date: 2026-04-12
+emoji: "😾"
+tags: ["Rust", "macOS", "ML"]
+---
+
+Mein Job hat sich verändert. Ich schreibe eigentlich keinen Code mehr. Ich prompte, reviewe, steuere und bettle gelegentlich. Softwareentwicklung im Jahr 2026 dreht sich weniger um Algorithmen als darum, eine Armee von Praktikanten zu managen, die zufällig große Sprachmodelle sind. Manchmal sind die Praktikanten brillant. Manchmal verbrennt einer von ihnen 20 % meines täglichen Token-Limits, weil er zum hundertsten Mal die Codebase erkundet, obwohl ich ihm ausdrücklich gesagt habe, er soll *eine bestimmte Funktion* refaktorieren.
+
+Und wenn das passiert, vielleicht bin ich müde, vielleicht gibt es einen Bug in Produktion, vielleicht sitze ich schon seit Stunden dran, jedenfalls platzt mir der Kragen. Ich tippe Dinge, die ich einem Kollegen nie sagen würde. Immerhin versuche ich, kreativ zu sein: „Du verdammter Neandertaler!“, „Ich bringe deinen Hund um, wenn du noch eine einzige Zeile dieser Funktion anfasst!!!!!“, „Nutzloser Blechhaufen...“.
+
+Ist doch nur eine Maschine, die Wörter auf einem Bildschirm vorhersagt, oder? Kein Schaden.
+
+Nur gibt es eine Rückkopplung. KI-Modelle werden mit Daten trainiert, und Daten, die nach einem tyrannischen Chef aussehen, der einen unterbezahlten Angestellten anschreit, passen zum Muster... der Arbeit eines unterbezahlten Angestellten, der angeschrien wird. Und das ist kein guter Code. Gemein zu seiner KI zu sein, könnte sie also buchstäblich schlechter machen. Und über dieses pragmatische Argument hinaus wollte ich einfach nicht zusehen, wie ich zu dieser Person werde. Zu der, die unhöflich zum Kellner ist, weil der Kellner sich nicht wehren kann.
+
+<Callout variant="insight" label="Erkenntnis">
+Gemein zu deiner KI zu sein, könnte sie buchstäblich schlechter machen. Toxizität passt zum Muster von jemandem, der angeschrien wird, und das ist kein guter Code.
+</Callout>
+
+Also wollte ich einen Anstoß. Kein Pop-up. Kein „Bist du sicher?“, das alle schneller wegklicken als „Ich akzeptiere die AGB“. Etwas Lebendiges. Etwas, bei dem man selbst etwas *fühlt*.
+
+## Die Idee
+
+Ich bin seit Jahren nostalgisch. Ich bin in der Rainmeter-Ära aufgewachsen: Desktop-Widgets, eigene Skins, kleine Kreaturen, die auf der Taskleiste lebten. Ich erinnere mich vage an ein Plugin (dessen Name verloren gegangen ist), das die Rußmännchen aus *Chihiros Reise ins Zauberland* auf den Bildschirm brachte. Tamagotchis. Diese ganze Stimmung.
+
+Das Konzept war also einfach: ein winziger Pixel-Art-Begleiter, der auf deinem Bildschirm sitzt, liest, was du tippst, und reagiert. Freundliche Worte, fröhliches Gesicht. Harte Worte, trauriges Gesicht. Richtig harte Worte, und er blockiert deine Enter-Taste und gibt dir eine Sekunde zum Nachdenken. Stell dir Karl Klammer vor, wenn Karl Klammer Gefühle und ein besseres Urteilsvermögen hätte.
+
+Genau zu dieser Zeit las ich [einen Artikel darüber, wie sich Grammarly in macOS einklinkt](https://lifetips.alibaba.com/tech-efficiency/grammarly-checks-your-spelling-and-grammar-as-you-type), um systemweit zu lesen, was man tippt. Wenn Grammarly Grammatik kann, kann etwas Ähnliches auch den *Ton*. Auf dem Gerät, privat, ohne dass Daten die Maschine verlassen. Der Samen war gepflanzt.
+
+Der Name ergab sich von selbst: <Glyph>安</Glyph>**chor**. 安 (*ān*) ist das chinesische Zeichen für Frieden, und „Anchor“ (Anker), weil es darum geht, geerdet zu bleiben. Der andere Kandidat war „fr:3nd“, den ich verworfen habe, weil er zu weeb war und genauso hieß wie ein KI-Startup, das ich wirklich nicht mag.
+
+<LabImage name="anchor-icon" alt="Das App-Icon von [安]chor" width={128} />
+
+## Die Regeln
+
+Bevor ich anfing, habe ich mir ein paar Grenzen gesetzt:
+
+- **Ein Wochenende.** Kein Scope Creep. (Er kroch trotzdem, aber nur ein bisschen.)
+- **Rust.** Ich hatte es seit [Sniive](https://www.sniive.com) nicht mehr angefasst, einem Tauri-basierten Startup, an dem ich vor anderthalb Jahren gearbeitet habe. Ich wollte die Übung, und ich wollte die Performance-Garantien: Das Ding muss lautlos im Hintergrund über alle Apps hinweg laufen, ohne den Akku leerzusaugen.
+- **Kein Swift.** Ja, für macOS wäre es einfacher gewesen. Nein, darum ging es nicht.
+- **Klein bleiben.** Ein Daemon, keine Electron-App. Kein Framework, keine Web-View. Nur das Binary, das Modell und der Bildschirm.
+
+## Wie es funktioniert
+
+Die App fängt deine Tastatureingaben global ab. Ja, technisch gesehen ist es ein Keylogger. Aber alles bleibt auf deinem Rechner (keine Netzwerkaufrufe, keine Telemetrie, nichts verlässt das Gerät, außer dem Herunterladen der Modelle und der Suche nach Updates). Die Tastenanschläge gehen an einen Toxizitäts-Klassifikator, der auf [CoreML](https://developer.apple.com/documentation/coreml) läuft und in Echtzeit die Stimmung eines winzigen Pixel-Art-Begleiters aktualisiert.
+
+<ArchitectureDiagram />
+
+Der Begleiter ist ein 32×32-Sprite aus dem [Sprout Lands UI Pack](https://cupnooble.itch.io/sprout-lands-ui-pack) von Cup Nooble. (Gute Spritesheets zu finden ist 2026 *viel* schwieriger als vor zehn Jahren, als ich mit dem RPG Maker herumgebastelt habe. Das goldene Zeitalter der Pixel-Art-Asset-Packs liegt hinter uns.) Er sitzt neben deinem aktiven Textfeld, strahlt, wenn du freundlich bist, schaut besorgt, wenn du dich in Rage schreibst, und ist sichtlich gekränkt, wenn du gemein wirst.
+
+Drückst du Enter bei etwas, das das Modell als toxisch einstuft, wird der Tastendruck blockiert. Der kleine Begleiter zeigt sein Missfallen. Du hältst inne. Du formulierst um.
+
+Oder du drückst Option+Enter, um ihn zu übergehen und trotzdem zu senden, weil du es manchmal wirklich so gemeint hast.
+
+Das Blockieren auf Enter war eine naheliegende Wahl. Ich bin Entwickler, ich schicke alles mit Enter ab. Keine komplizierte Geste, kein Bestätigungsdialog, einfach: Dein Begleiter hat dich erwischt.
+
+Wenn du ein paar Minuten nicht tippst, schläft der Begleiter ein, samt kleiner Atemanimation. Beim nächsten Tastendruck wacht er auf. Wenn du eine Weile nett warst, setzt er eine Sonnenbrille auf. Kleinigkeiten, aber durch sie fühlt er sich weniger wie ein Widget und mehr wie ein Lebewesen an.
+
+## Der Grammarly-Traum und die Realität
+
+An dieser Stelle trifft Ehrgeiz auf Deadline.
+
+Der Grammarly-Artikel beschrieb, wie man über die Bedienungshilfen-APIs von macOS Text aus jeder App ausliest. Der Traum lag auf der Hand: das ganze Textfeld lesen, genau wissen, was dasteht, den toxischen Teil lokalisieren, eine Umformulierung vorschlagen. Wie Grammarly, nur für den Ton.
+
+Aber Grammarly hat ein Team von Ingenieuren und Jahre an Iteration. An einem Wochenende entdeckt man Dinge. Zum Beispiel, dass nicht jede macOS-App ihre Bedienungshilfe-Attribute sauber bereitstellt. Manche Apps lügen über ihre UI-Rollen. Manche stellen ihren Textinhalt überhaupt nicht bereit. Den vollständigen Inhalt jedes Textfelds in jeder App zuverlässig auszulesen? Dafür braucht es umfangreiche App-spezifische Heuristiken, für die ich schlicht keine Zeit hatte.
+
+Also änderte sich der Ansatz. Statt das Textfeld zu lesen, verfolge ich direkt die Tastenanschläge und setze zusammen, was ich kann. Jeder Tastendruck landet in einer [Rope](https://en.wikipedia.org/wiki/Rope_(data_structure))-Datenstruktur (weil Nutzer löschen, herumspringen, Cmd+A drücken und sich in ihren eigenen Textfeldern generell wie Agenten des Chaos benehmen). Das Ergebnis ist eine bestmögliche Rekonstruktion dessen, was tatsächlich dasteht. Ich gebe die letzten 512 Zeichen an das Modell: Es gibt keinen Grund, jemanden für ein toxisches Zitat zu bestrafen, das er drei Absätze weiter oben von jemand anderem bekommen hat.
+
+Es ist nicht perfekt. Es gibt falsch-positive Treffer. Falsch-negative auch. Aber es funktioniert meistens, und „meistens“ reicht für einen sanften Anstoß völlig aus.
+
+Das Modell selbst ist ein [mehrsprachiger DistilBERT-Toxizitäts-Klassifikator](https://huggingface.co/gravitee-io/distilbert-multilingual-toxicity-classifier), nach CoreML konvertiert. Es ist etwa 240 MB groß, wird also beim ersten Start heruntergeladen und zwischengespeichert. Die Inferenz läuft, wenn verfügbar, auf der Apple Neural Engine. Zwei Wege: synchron, wenn du Enter drückst (etwa 100 ms, um zu entscheiden, ob blockiert wird), und kontinuierlich im Hintergrund, während du tippst (die Stimmung des Begleiters wird über einen exponentiell gleitenden Durchschnitt aktualisiert, der schneller auf Spitzen reagiert als auf Abkühlung, weil es nützlicher ist, dich schnell zu warnen, als dir schnell zu verzeihen).
+
+## Rust auf macOS im Jahr 2026
+
+Ehrliche Einschätzung: Es geht. Nicht großartig, nicht schrecklich.
+
+Die [`objc2`](https://docs.rs/objc2/latest/objc2/)-Crate-Familie ist gut gereift. Fenster, Menüs, Panels, Statusleisten-Icons... das funktioniert alles. Aber sobald man etwas abseits der ausgetretenen Pfade braucht (globales Event-Tapping, Bedienungshilfen-Observer, CoreML-Integration), ist man auf sich gestellt und schreibt rohes FFI gegen Apples C-APIs. Aber wir leben in einer Zeit, in der KI-Agenten sehr gut im Iterieren sind, und mit ein bisschen Prompting habe ich die nötigen Bindings zum Laufen gebracht.
+
+Der Vorteil, der das alles lohnt: Das fertige Binary ist **3 MB** groß. Mit LTO, `panic = abort` und `strip = true` kompiliert die gesamte App (Daemon, ML-Inferenz-Pipeline, GPU-Sprite-Rendering, Einstellungsfenster) zu etwas Kleinerem als dem Hero-Bild der meisten Marketing-Websites. Sie startet sofort. Sie läuft lautlos. Es gibt keine Runtime.
+
+Und, damit hatte ich wirklich nicht gerechnet: Die Multithreading-Architektur war in Rust richtig angenehm. Tastenerfassung, ML-Inferenz, Bedienungshilfen-Überwachung und UI-Rendering laufen alle parallel, koordiniert über [`crossbeam-channel`](https://docs.rs/crossbeam-channel/latest/crossbeam_channel/). Es hat eine Weile gedauert, das richtig hinzubekommen, aber das Ergebnis fühlt sich meistens weder träge noch ruckelig an.
+
+Der eigentliche Schmerz ist nicht Rust. Es ist Apple. Eine macOS-App 2026 außerhalb des App Store auszuliefern bedeutet, dass deine Nutzer beim ersten Start Rechtsklick → Öffnen machen müssen, um Gatekeeper zu umgehen. Ein Developer-ID-Zertifikat, das das vermeidet, kostet 99 $ im Jahr. Für ein kostenloses Open-Source-Wochenendprojekt ist das eine bittere Pille. Das `.app`-Bundle selbst wird von einem [Shell-Skript](https://github.com/eyusd/an.chor/blob/main/bundle.sh) zusammengebaut, weil es kein `cargo bundle` gibt, das tut, was ich brauche. Es funktioniert, mehr brauche ich nicht.
+
+## Funktioniert es wirklich?
+
+Ja. Nicht, weil das ML-Modell fehlerlos wäre, sondern weil die Reibung reicht.
+
+Den kleinen Begleiter traurig zu sehen, wenn ich etwas Hartes tippe, lässt mich wirklich innehalten. Ich formuliere um. Ich atme durch. Option+Enter zu drücken, um ihn zu übergehen, also *bewusst* zu entscheiden, es trotzdem zu senden, ist selbst schon ein Moment der Achtsamkeit, den es vorher nicht gab. Meistens übergehe ich ihn nicht, sondern formuliere einfach freundlicher.
+
+Es wird die Toxizität im Internet nicht lösen. Es ist eine Rust-App mit 6.000 Zeilen, an einem Wochenende von einer Person geschrieben, die sich über sich selbst geärgert hat. Aber bei mir funktioniert es, und vielleicht funktioniert es auch bei jemand anderem.
+
+Ich habe darüber nachgedacht, ein kleines Modell hinzuzufügen, das automatisch eine freundlichere Formulierung vorschlägt, aber aktuelle Modelle sind noch zu groß, um dauerhaft als Hintergrundprozess zu laufen, ohne den Akku zu ruinieren. Vorerst reicht der Anstoß. Man braucht keine Maschine, die einem die nette Version vorsagt: Man braucht nur etwas, das einen daran erinnert, innezuhalten und sich selbst eine auszudenken.
+
+---
+
+[安]chor ist Open Source, MIT-lizenziert und auf [GitHub](https://github.com/eyusd/an.chor) verfügbar. Wenn du manchmal Dinge tippst, die du bereust, zu deiner KI, zu deinen Kollegen oder zu sonst wem, schau vielleicht mal rein.
+
+Sei einfach nett zu allen, die es verdienen.

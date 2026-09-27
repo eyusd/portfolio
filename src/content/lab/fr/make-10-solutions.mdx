@@ -1,0 +1,53 @@
+---
+title: "Résoudre le jeu du « Make 10 » par force brute"
+description: "Un petit projet pour résoudre par force brute le casse-tête « Make 10 » pour chaque nombre à 4 chiffres (0000–9999). Les règles, les opérations autorisées, et les résultats du solveur."
+date: 2025-11-23
+emoji: "🔢"
+tags: ["Algorithmes", "Casse-tête"]
+---
+
+Je suis tombé récemment sur un short YouTube ou Instagram de quelqu'un qui essayait de résoudre le **[Sydney Train Game](https://en.wikipedia.org/wiki/24_(puzzle))**. Le principe est simple : prendre les quatre chiffres du numéro de la voiture et les combiner avec des opérations arithmétiques de base pour obtenir 24. J'ai joué avec quelques exemples, mais la plupart étaient très faciles. Je voulais quelque chose de plus corsé.
+
+Pour compliquer les choses, j'ai remplacé la cible 24 par **10**, qui a moins de diviseurs, et je me suis limité aux opérations **ordonnées** (c'est-à-dire sans réordonner les chiffres). Je ne suis sûrement pas le premier à avoir eu l'idée de cette variante, mais faute de meilleur nom, je l'appellerai le jeu du « Make 10 ».
+
+Ça m'a occupé l'esprit un moment, mais en bon développeur, il a évidemment fallu que je passe du temps à automatiser la solution.
+
+Le résultat est un solveur par force brute qui explore toutes les combinaisons d'opérations possibles pour atteindre 10, pour chaque entrée à 4 chiffres (de `0000` à `9999`). Ci-dessous, je décris les règles que je me suis fixées, les opérations autorisées, et je partage les résultats du solveur.
+
+## Les règles
+
+La cible est toujours **10**.
+L'entrée est une chaîne de 4 chiffres.
+L'ordre est immuable.
+Chacun des quatre chiffres doit être utilisé exactement une fois.
+
+## Les opérations
+
+Je voulais que le casse-tête reste difficile, mais soluble.
+
+Pour respecter l'esprit du jeu original, je me suis limité aux opérations qui se lisent sans ambiguïté de gauche à droite (c'est pour ça que la division est notée avec une barre oblique, de façon peu conventionnelle).
+
+Pour que ce soit intéressant (et soluble), il a fallu élargir le jeu d'opérateurs standard. L'arithmétique de base ne suffit pas à couvrir l'espace de recherche, mais je ne voulais pas non plus autoriser une complexité infinie.
+
+J'ai autorisé les opérations suivantes :
+
+*   **Standard :** [addition](https://fr.wikipedia.org/wiki/Addition), [soustraction](https://fr.wikipedia.org/wiki/Soustraction), [multiplication](https://fr.wikipedia.org/wiki/Multiplication), [division](https://fr.wikipedia.org/wiki/Division).
+*   **Puissances et racines :** [exponentiation](https://fr.wikipedia.org/wiki/Exponentiation), [racine carrée](https://fr.wikipedia.org/wiki/Racine_carr%C3%A9e) et [racine n-ième](https://fr.wikipedia.org/wiki/Racine_n-i%C3%A8me).
+*   **Fonctions :** [logarithmes](https://fr.wikipedia.org/wiki/Logarithme), [factorielles](https://fr.wikipedia.org/wiki/Factorielle), [modulo](https://fr.wikipedia.org/wiki/Modulo_(op%C3%A9ration)) et [valeur absolue](https://fr.wikipedia.org/wiki/Valeur_absolue).
+*   **L'opérateur triangulaire :** j'ai inclus le nombre triangulaire, noté ici `?` selon la notation de Knuth (par exemple `3?` = 6). Plus de détails [ici](https://fr.wikipedia.org/wiki/Nombre_triangulaire).
+
+Je sais que certaines de ces opérations (comme les factorielles ou les logarithmes) peuvent ressembler un peu à de la « triche » dans un simple jeu d'arithmétique. Mais elles ajoutent une couche de complexité intéressante et ouvrent de nouvelles façons d'atteindre la cible. Lors de mes premiers essais, environ 10 % des entrées étaient insolubles avec l'arithmétique de base seule : ces opérations supplémentaires étaient donc nécessaires pour couvrir davantage d'entrées.
+
+Voici la liste complète, exportée, des solutions trouvées par le solveur pour chaque entrée à 4 chiffres. La liste interactive donne l'expression la plus simple trouvée pour chacune.
+
+<Make10List />
+
+## L'implémentation
+
+Le code n'a rien de révolutionnaire. C'est une recherche en profondeur par force brute qui construit un arbre d'expressions. La vraie difficulté n'était pas les maths, mais les limites de la machine.
+
+1.  **Terminaison :** imbriquer des factorielles et des nombres triangulaires provoque très vite des dépassements. J'ai dû limiter la profondeur de recherche de façon agressive pour éviter que le code tourne jusqu'à la mort thermique de l'univers.
+2.  **Mise en forme :** j'ai passé un temps déraisonnable à me battre avec LaTeX pour que la sortie ne ressemble pas à une soupe d'ASCII.
+3.  **Heuristiques :** je ne voulais pas *une* solution, je voulais la *plus simple*. J'ai pondéré le solveur pour qu'il préfère l'arithmétique de base (`+`, `-`) aux « armes de destruction massive » comme l'opérateur triangulaire ou les racines imbriquées. Il ne sort l'artillerie lourde qu'en cas d'absolue nécessité (du moins, c'est ce que j'ai essayé de faire).
+
+Et si vous en trouvez, je serais ravi de voir des solutions plus simples qui ne reposent ni sur le modulo (`mod`) ni sur l'opérateur triangulaire (`?`) ; partagez-les et je les intégrerai.

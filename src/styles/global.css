@@ -173,6 +173,7 @@ footer.foot a:hover { color: var(--fg) }
 .crumbs li + li::before { content: '/'; margin-right: 8px; color: var(--border) }
 .crumbs a:hover { color: var(--fg) }
 .article { max-width: 720px; margin: 0 auto }
+.article .page-head { padding-top: clamp(8px, 4vh, 40px) }
 .article-head h1 { font-size: clamp(24px, 4vw, 34px); line-height: 1.25; letter-spacing: -.01em; margin: 0 0 14px; font-weight: 650 }
 .article-head .px.lead { width: 28px; height: 28px; margin: 0 0 18px }
 .meta { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 12px; color: var(--muted); margin: 0 0 12px }
@@ -204,6 +205,7 @@ footer.foot a:hover { color: var(--fg) }
 .glyph { font-size: 1.6em; font-weight: 700; color: var(--primary); vertical-align: -.12em }
 .lab-img { margin: 1.5em auto; border-radius: 16px }
 .next { margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--border) }
+.next .lab-list { margin-top: 0 }
 .next h2 { font-size: 12px; font-weight: 500; color: var(--primary); letter-spacing: .04em; margin: 0 0 16px }
 
 /* interactive widgets inside articles */

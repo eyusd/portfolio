@@ -15,7 +15,7 @@ export default defineConfig({
   security: { csp: true },
   image: { responsiveStyles: false },
   markdown: {
-    shikiConfig: { theme: 'github-dark-default', wrap: true },
+    syntaxHighlight: 'prism',
   },
   integrations: [
     mdx(),
