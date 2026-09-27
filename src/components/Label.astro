@@ -1,0 +1,5 @@
+---
+interface Props { n: string; id: string }
+const { n, id } = Astro.props;
+---
+<h2 class="label reveal" id={id}><span class="n" aria-hidden="true">{n}</span><slot /><i class="rule" aria-hidden="true"></i></h2>

@@ -1,0 +1,113 @@
+---
+import { render } from 'astro:content';
+import Base from '../../../layouts/Base.astro';
+import Px from '../../../components/Px.astro';
+import Callout from '../../../components/mdx/Callout.astro';
+import Glyph from '../../../components/mdx/Glyph.astro';
+import LabImage from '../../../components/mdx/LabImage.astro';
+import ArchitectureDiagram from '../../../components/mdx/ArchitectureDiagram.astro';
+import Make10List from '../../../components/mdx/Make10List.astro';
+import LifePercentageCalculator from '../../../components/mdx/LifePercentageCalculator.astro';
+import { defaultLocale, formatDate, localeMeta, localePath, locales, t, type Locale } from '../../../i18n';
+import { PERSON, SITE } from '../../../data/profile';
+import { article, articles, slugs, translationsOf } from '../../../data/lab';
+import { breadcrumbs, homeCrumb, ids, labCrumb } from '../../../data/schema';
+
+export function getStaticPaths() {
+  return locales.flatMap((l) => slugs.map((slug) => ({ params: { lang: l === defaultLocale ? undefined : l, slug }, props: { locale: l, slug } })));
+}
+const { locale, slug } = Astro.props as { locale: Locale; slug: string };
+const a = article(locale, slug)!;
+const { Content } = await render(a.entry);
+const d = a.entry.data;
+const translations = translationsOf(slug);
+const path = `/lab/${slug}`;
+const url = new URL(localePath(locale, path), SITE).href;
+// an untranslated copy points search engines at the original
+const canonical = a.translated ? url : new URL(localePath(defaultLocale, path), SITE).href;
+const others = articles(locale).filter((x) => x.slug !== slug);
+const ogImage = `/og/${a.lang}/lab/${slug}.png`;
+const words = (a.entry.body ?? '').split(/\s+/).length;
+
+const jsonLd = [
+  {
+    '@type': 'BlogPosting',
+    '@id': `${url}#article`,
+    headline: d.title,
+    description: d.description,
+    url,
+    mainEntityOfPage: url,
+    datePublished: d.date.toISOString(),
+    dateModified: (d.updated ?? d.date).toISOString(),
+    inLanguage: localeMeta[a.lang].tag,
+    image: { '@type': 'ImageObject', url: new URL(ogImage, SITE).href, width: 1200, height: 630 },
+    author: { '@type': 'Person', '@id': ids.person, name: PERSON.name, url: SITE, sameAs: [PERSON.github, PERSON.linkedin] },
+    publisher: { '@id': ids.person },
+    isPartOf: { '@type': 'Blog', '@id': `${new URL(localePath(locale, '/lab'), SITE).href}#page`, name: `${t(locale, 'lab')} — ${PERSON.name}` },
+    keywords: d.tags.join(', '),
+    articleSection: t(locale, 'lab'),
+    wordCount: words,
+    timeRequired: `PT${a.minutes}M`,
+    ...(a.translated && locale !== defaultLocale ? { translationOfWork: { '@id': `${new URL(path, SITE).href}#article` } } : {}),
+    ...(locale === defaultLocale && translations.length > 1
+      ? { workTranslation: translations.filter((l) => l !== defaultLocale).map((l) => ({ '@id': `${new URL(localePath(l, path), SITE).href}#article` })) }
+      : {}),
+  },
+  breadcrumbs(locale, [homeCrumb(locale), labCrumb(locale), [d.title, path]]),
+];
+---
+<Base
+  locale={locale}
+  title={`${d.title} — ${PERSON.name}`}
+  description={d.description}
+  path={path}
+  alternates={translations}
+  canonical={canonical}
+  ogImage={ogImage}
+  ogType="article"
+  article={{ published: d.date, modified: d.updated, tags: d.tags }}
+  jsonLd={jsonLd}
+>
+  <link slot="head" rel="alternate" type="text/markdown" href={`${localePath(a.lang, path)}.md`} title="Markdown" />
+  <main id="content" class="wrap">
+    <article class="article" lang={a.lang !== locale ? localeMeta[a.lang].tag : undefined}>
+      <nav aria-label="Breadcrumb">
+        <ol class="crumbs">
+          <li><a href={localePath(locale)}>{PERSON.name}</a></li>
+          <li><a href={localePath(locale, '/lab')}>{t(locale, 'lab')}</a></li>
+        </ol>
+      </nav>
+      <header class="article-head page-head">
+        <Px e={d.emoji} lead />
+        <h1 data-scramble>{d.title}</h1>
+        <p class="meta">
+          <span>{t(locale, 'published')} <time datetime={d.date.toISOString().slice(0, 10)}>{formatDate(locale, d.date)}</time></span>
+          <span>{a.minutes} {t(locale, 'minRead')}</span>
+          <span>{d.tags.join(' · ')}</span>
+        </p>
+        <p class="lede">{d.description}</p>
+        {!a.translated && <p class="note" lang={localeMeta[locale].tag}>{t(locale, 'translationNote')}</p>}
+      </header>
+      <div class="prose">
+        <Content components={{ Callout, Glyph, LabImage, ArchitectureDiagram, Make10List, LifePercentageCalculator }} />
+      </div>
+    </article>
+
+    {others.length > 0 && (
+      <section class="next article" aria-labelledby="more-h">
+        <h2 id="more-h">{t(locale, 'moreExperiments')}</h2>
+        <ul class="list lab-list">
+          {others.map((o) => (
+            <li class="entry">
+              <p class="date"><time datetime={o.entry.data.date.toISOString().slice(0, 10)}>{o.entry.data.date.toISOString().slice(0, 10).replace(/-/g, '.')}</time></p>
+              <div>
+                <h3 class="title"><a href={localePath(locale, `/lab/${o.slug}`)} lang={o.lang !== locale ? localeMeta[o.lang].tag : undefined}><Px e={o.entry.data.emoji} lead />{o.entry.data.title} <span class="arrow" aria-hidden="true">→</span></a></h3>
+                <p lang={o.lang !== locale ? localeMeta[o.lang].tag : undefined}>{o.entry.data.description}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+  </main>
+</Base>

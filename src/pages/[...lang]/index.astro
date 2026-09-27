@@ -1,0 +1,119 @@
+---
+import Base from '../../layouts/Base.astro';
+import Label from '../../components/Label.astro';
+import Px from '../../components/Px.astro';
+import When from '../../components/When.astro';
+import Dino from '../../components/Dino.astro';
+import { langParams, localeMeta, t, type Locale } from '../../i18n';
+import { PERSON, SITE, profile } from '../../data/profile';
+import { breadcrumbs, homeCrumb, ids, personNode, websiteNode } from '../../data/schema';
+import logosUrl from '../../assets/logos.png?url';
+import portraitUrl from '../../assets/portrait.webp?url';
+
+export const getStaticPaths = langParams;
+const { locale } = Astro.props as { locale: Locale };
+const p = profile(locale);
+const tag = localeMeta[locale].tag;
+const title = `${PERSON.name} — ${p.title}`;
+const words = PERSON.name.split(' ');
+
+const jsonLd = [
+  personNode(locale),
+  websiteNode(locale),
+  {
+    '@type': 'ProfilePage',
+    '@id': `${new URL(Astro.url.pathname, SITE).href}#page`,
+    url: new URL(Astro.url.pathname, SITE).href,
+    name: title,
+    description: p.description,
+    inLanguage: tag,
+    isPartOf: { '@id': ids.website },
+    mainEntity: { '@id': ids.person },
+    about: { '@id': ids.person },
+    dateModified: new Date().toISOString(),
+  },
+  breadcrumbs(locale, [homeCrumb(locale)]),
+];
+---
+<Base locale={locale} title={title} description={p.description} path="/" ogImage={`/og/${locale}/index.png`} ogType="profile" jsonLd={jsonLd} fx>
+  <main id="content" class="wrap" data-logos={logosUrl} data-portrait={portraitUrl}>
+    <section class="hero" aria-labelledby="name">
+      <h1 class="name" id="name">{words.map((w, i) => <><span class="w">{w}</span>{i < words.length - 1 && ' '}</>)}</h1>
+      <p class="who"><b>{p.title}</b> · {p.location}</p>
+      <p class="tagline" data-scramble>{p.subtitle}</p>
+    </section>
+
+    <div class="grid">
+      <div class="col">
+        <section id="about" aria-labelledby="about-h" data-logo="me" data-win={JSON.stringify([PERSON.name.toLowerCase(), p.location.split(',')[0]?.toLowerCase(), t(locale, 'aboutWin')])}>
+          <Label n="01" id="about-h">{p.nav.about}</Label>
+          <div class="about">
+            {p.about.map((runs) => <p>{runs.map((r) => (r.href ? <a href={r.href} target="_blank" rel="noopener">{r.text}</a> : r.text))}</p>)}
+          </div>
+        </section>
+
+        <section aria-labelledby="experience-h">
+          <Label n="02" id="experience-h">{p.nav.experience}</Label>
+          <ol class="list" reversed>
+            {p.experiences.map((e, i) => {
+              const intro = e.blocks.filter((b) => b.type === 'p');
+              const rest = e.blocks.filter((b) => b.type !== 'p');
+              return (
+                <li class="entry reveal" data-logo={e.key} data-delay={i * 90} data-win={JSON.stringify([e.company.toLowerCase(), `${e.begin.replace('-', '.')} — ${e.end?.replace('-', '.') ?? t(locale, 'now')}`, e.role.toLowerCase()])}>
+                  <When locale={locale} begin={e.begin} end={e.end} />
+                  <div>
+                    <h3 class="title">{e.role} <a href={e.url} target="_blank" rel="noopener"><span class="at">@</span>{e.company} <span class="arrow" aria-hidden="true">↗</span></a></h3>
+                    {intro.map((b) => b.type === 'p' && <p>{b.text}</p>)}
+                    <ul class="pills" aria-label="Stack">{e.techs.map(([emoji, name]) => <li class="pill"><Px e={emoji} />{name}</li>)}</ul>
+                    {rest.length > 0 && (
+                      <details class="hl">
+                        <summary><span class="sign" aria-hidden="true">+</span> <span class="m">{t(locale, 'highlights')}</span><span class="l">{t(locale, 'less')}</span></summary>
+                        <div>
+                          {rest.map((b) => (b.type === 'h' ? <h4>{b.text}</h4> : b.type === 'ul' ? <ul>{b.items.map((it) => <li>{it}</li>)}</ul> : null))}
+                        </div>
+                      </details>
+                    )}
+                    <ul class="refs">{e.refs.map(([name, href]) => <li><a href={href} target="_blank" rel="noopener">{name} <span class="arrow" aria-hidden="true">↗</span></a></li>)}</ul>
+                  </div>
+                </li>
+              );
+            })}
+          </ol>
+        </section>
+
+        <section aria-labelledby="education-h">
+          <Label n="03" id="education-h">{p.nav.education}</Label>
+          <ol class="list" reversed>
+            {p.educations.map((e, i) => {
+              const intro = e.blocks.filter((b) => b.type === 'p');
+              const courses = e.blocks.flatMap((b) => (b.type === 'ul' ? b.items : []));
+              return (
+                <li class="entry reveal" data-logo={e.key} data-delay={i * 90} data-win={JSON.stringify([e.school.toLowerCase(), `${e.begin.replace('-', '.')} — ${e.end?.replace('-', '.') ?? t(locale, 'now')}`, e.degree.toLowerCase()])}>
+                  <When locale={locale} begin={e.begin} end={e.end} />
+                  <div>
+                    <h3 class="title"><Px e={e.emoji} lead />{e.degree} <a href={e.url} target="_blank" rel="noopener"><span class="at">@</span>{e.school} <span class="arrow" aria-hidden="true">↗</span></a></h3>
+                    {intro.map((b) => b.type === 'p' && <p>{b.text}</p>)}
+                    {courses.length > 0 && <ul class="pills">{courses.map((c) => <li class="pill">{c}</li>)}</ul>}
+                  </div>
+                </li>
+              );
+            })}
+          </ol>
+        </section>
+      </div>
+
+      <aside class="side" aria-hidden="true">
+        <div class="win">
+          <div class="win-head"><b id="win-title">{PERSON.name.toLowerCase()}</b><span id="win-meta">{p.location.split(',')[0]?.toLowerCase()}</span></div>
+          <canvas id="pane" width="378" height="400"></canvas>
+          <div class="win-foot" data-hint-rotate={t(locale, 'dragToRotate')} data-hint-hover={t(locale, 'hoverMe')}>
+            <span id="win-foot">{t(locale, 'aboutWin')}</span><span id="win-hint">{t(locale, 'hoverMe')}</span>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <Dino locale={locale} />
+  </main>
+</Base>
+

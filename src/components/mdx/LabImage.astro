@@ -1,0 +1,9 @@
+---
+import { Image } from 'astro:assets';
+import anchorIcon from '../../assets/lab/anchor-icon.png';
+
+const images = { 'anchor-icon': anchorIcon } as const;
+interface Props { name: keyof typeof images; alt: string; width?: number }
+const { name, alt, width = 128 } = Astro.props;
+---
+<Image class="lab-img" src={images[name]} alt={alt} width={width} densities={[1, 2]} format="webp" loading="lazy" />

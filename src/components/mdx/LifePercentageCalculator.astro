@@ -1,0 +1,84 @@
+---
+import { widgets } from '../../i18n/widgets';
+import { localeFromPath } from '../../data/lab';
+
+const w = widgets[localeFromPath(Astro.url.pathname)];
+---
+<form class="widget lp" data-strings={JSON.stringify(w)} novalidate>
+  <div class="lp-fields">
+    <div><label for="lp-dob">{w.lpDob}</label><input id="lp-dob" name="dob" type="date" required /></div>
+    <div><label for="lp-start">{w.lpStart}</label><input id="lp-start" name="start" type="date" required /></div>
+    <div class="lp-pct">
+      <label for="lp-p">{w.lpPct} <output for="lp-p" id="lp-out">50%</output></label>
+      <input id="lp-p" name="p" type="range" min="5" max="95" step="5" value="50" />
+    </div>
+  </div>
+  <div class="lp-result" aria-live="polite">
+    <p class="lp-msg">{w.lpPrompt}</p>
+    <div class="lp-hit" hidden>
+      <p class="lp-lbl"></p>
+      <p class="lp-date"></p>
+      <p class="lp-age"></p>
+      <div class="lp-actions">
+        <a class="btn lp-gcal" target="_blank" rel="noopener">{w.lpGoogle} <span aria-hidden="true">↗</span></a>
+        <button class="btn lp-ics" type="button">{w.lpIcs}</button>
+      </div>
+    </div>
+  </div>
+</form>
+
+<style>
+  .lp { padding: 18px; max-width: 460px; margin-inline: auto }
+  .lp-fields { display: grid; gap: 16px }
+  .lp-pct label { display: flex; justify-content: space-between }
+  .lp-pct output { color: var(--primary); font-weight: 500 }
+  .lp-result { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; min-height: 118px }
+  .lp-result p { margin: 0 }
+  .lp-msg, .lp-lbl, .lp-age { font-size: 12px; color: var(--muted) }
+  .lp-date { font-size: 22px; font-weight: 650; color: var(--primary); margin: 6px 0 !important }
+  .lp-actions { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 14px }
+</style>
+
+<script>
+  for (const form of document.querySelectorAll<HTMLFormElement>('form.lp')) {
+    const s = JSON.parse(form.dataset.strings!) as Record<string, string>;
+    const $ = <T extends Element>(q: string) => form.querySelector<T>(q)!;
+    const dob = $<HTMLInputElement>('#lp-dob'), start = $<HTMLInputElement>('#lp-start'), pct = $<HTMLInputElement>('#lp-p');
+    const out = $<HTMLOutputElement>('#lp-out'), msg = $<HTMLElement>('.lp-msg'), hit = $<HTMLElement>('.lp-hit');
+    const lang = document.documentElement.lang;
+    const fmt = new Intl.DateTimeFormat(lang, { dateStyle: 'long', timeZone: 'UTC' });
+    const pctFmt = new Intl.NumberFormat(lang, { style: 'percent' });
+    const ymd = (d: Date) => d.toISOString().slice(0, 10).replace(/-/g, '');
+    let target: Date | null = null;
+
+    function update() {
+      const p = Number(pct.value) / 100;
+      out.value = pctFmt.format(p);
+      const D = dob.valueAsNumber, S = start.valueAsNumber;
+      target = null;
+      if (Number.isNaN(D) || Number.isNaN(S)) { msg.textContent = s.lpPrompt!; msg.hidden = false; hit.hidden = true; return; }
+      if (S < D) { msg.textContent = s.lpBefore!; msg.hidden = false; hit.hidden = true; return; }
+      // (T − S) / (T − D) = p  ⇒  T = (S − p·D) / (1 − p)
+      target = new Date((S - p * D) / (1 - p));
+      const age = (target.getTime() - D) / (365.2425 * 864e5);
+      msg.hidden = true; hit.hidden = false;
+      $('.lp-lbl').textContent = target.getTime() < Date.now() ? s.lpPast! : s.lpClaim!;
+      $('.lp-date').textContent = fmt.format(target);
+      $('.lp-age').textContent = s.lpAge!.replace('{age}', age.toLocaleString(lang, { maximumFractionDigits: 1 }));
+      const next = new Date(target.getTime() + 864e5), title = s.lpEvent!.replace('{p}', String(pct.value));
+      $<HTMLAnchorElement>('.lp-gcal').href = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${ymd(target)}/${ymd(next)}`;
+    }
+    form.addEventListener('input', update);
+    form.addEventListener('submit', (e) => e.preventDefault());
+    $('.lp-ics').addEventListener('click', () => {
+      if (!target) return;
+      const title = s.lpEvent!.replace('{p}', String(pct.value)), next = new Date(target.getTime() + 864e5);
+      const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//chardine.fr//life-percentage//EN', 'BEGIN:VEVENT',
+        `UID:${ymd(target)}-${pct.value}@chardine.fr`, `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').slice(0, 15)}Z`,
+        `DTSTART;VALUE=DATE:${ymd(target)}`, `DTEND;VALUE=DATE:${ymd(next)}`, `SUMMARY:${title}`, 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
+      const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(new Blob([ics], { type: 'text/calendar' })), download: 'life-percentage.ics' });
+      a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    });
+    update();
+  }
+</script>

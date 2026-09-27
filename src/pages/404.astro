@@ -1,0 +1,18 @@
+---
+import Base from '../layouts/Base.astro';
+import { localePath, t } from '../i18n';
+import { PERSON } from '../data/profile';
+
+// Netlify serves this for every missing path; English, with a way into every language.
+const locale = 'en';
+---
+<Base locale={locale} title={`404 — ${PERSON.name}`} description={t(locale, 'notFoundText')} path="/404" ogImage="/og/en/index.png" noindex alternates={['en']}>
+  <main id="content" class="wrap">
+    <section class="page-head article-head">
+      <p class="label"><span class="n">404</span></p>
+      <h1 data-scramble>{t(locale, 'notFound')}</h1>
+      <p class="tagline">{t(locale, 'notFoundText')}</p>
+      <p class="tagline"><a class="btn" href={localePath(locale)}>← {t(locale, 'backHome')}</a> <a class="btn" href={localePath(locale, '/lab')}>{t(locale, 'lab')}</a></p>
+    </section>
+  </main>
+</Base>

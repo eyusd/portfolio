@@ -1,45 +1,47 @@
 [build]
   command = "pnpm run build"
-  publish = ".next"
+  publish = "dist"
 
 [build.environment]
-  PNPM_FLAGS = "--shamefully-hoist"
+  NODE_VERSION = "22"
 
-# Long-term cache for Next.js immutable static assets
+# The default locale lives at the root; old /en/… links go there.
+[[redirects]]
+  from = "/en"
+  to = "/"
+  status = 301
+[[redirects]]
+  from = "/en/*"
+  to = "/:splat"
+  status = 301
+[[redirects]]
+  from = "/kr/*"
+  to = "/ko/:splat"
+  status = 301
+
+# Fingerprinted build output never changes.
 [[headers]]
-  for = "/_next/static/*"
+  for = "/_astro/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
-# Cache public assets (images, fonts, etc.) for 1 week
 [[headers]]
-  for = "/fonts/*"
+  for = "/og/*"
   [headers.values]
-    Cache-Control = "public, max-age=604800, stale-while-revalidate=86400"
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
 
 [[headers]]
-  for = "/*.png"
+  for = "/*.md"
   [headers.values]
-    Cache-Control = "public, max-age=604800, stale-while-revalidate=86400"
+    Content-Type = "text/markdown; charset=utf-8"
+    X-Robots-Tag = "noindex"
 
-[[headers]]
-  for = "/*.svg"
-  [headers.values]
-    Cache-Control = "public, max-age=604800, stale-while-revalidate=86400"
-
-[[headers]]
-  for = "/*.ico"
-  [headers.values]
-    Cache-Control = "public, max-age=604800, stale-while-revalidate=86400"
-
-# HTML pages: always revalidate
 [[headers]]
   for = "/*"
   [headers.values]
-    Cache-Control = "public, max-age=0, must-revalidate"
-    X-Frame-Options = "DENY"
     X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
     Referrer-Policy = "strict-origin-when-cross-origin"
-    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), interest-cohort=()"
     Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
     Cross-Origin-Opener-Policy = "same-origin"

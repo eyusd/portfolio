@@ -1,0 +1,66 @@
+---
+import { widgets } from '../../i18n/widgets';
+import { localeFromPath } from '../../data/lab';
+
+const caption = widgets[localeFromPath(Astro.url.pathname)].diagram;
+const box = (x: number, y: number, w: number, kind = 'box') => ({ x, y, w, kind });
+type Box = ReturnType<typeof box> & { t: string; s?: string };
+const boxes: Box[] = [
+  { ...box(10, 60, 120), t: 'Keystrokes' },
+  { ...box(180, 60, 120), t: 'Rope', s: 'Buffer' },
+  { ...box(350, 60, 150, 'box strong'), t: 'Toxicity', s: 'CoreML classifier' },
+  { ...box(570, 10, 140, 'box dim'), t: 'EMA score', s: 'background, continuous' },
+  { ...box(570, 80, 140), t: 'Sprite mood', s: 'happy → worried → sad' },
+  { ...box(350, 170, 150, 'box dim'), t: 'Enter pressed?', s: 'synchronous, ~100ms' },
+  { ...box(250, 280, 120, 'box bad'), t: 'Block', s: 'companion reacts' },
+  { ...box(480, 280, 120), t: 'Allow', s: 'send message' },
+  { ...box(130, 280, 80, 'box dim'), t: 'Opt+↵', s: 'override' },
+];
+---
+<figure class="diagram">
+  <svg viewBox="0 0 720 340" role="img" aria-label={caption} xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <marker id="ah" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" class="head" /></marker>
+      <marker id="ah-p" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" class="head p" /></marker>
+      <marker id="ah-b" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" class="head b" /></marker>
+    </defs>
+    {boxes.map((b) => (
+      <g>
+        <rect x={b.x} y={b.y} width={b.w} height="50" rx="8" class={b.kind} />
+        <text x={b.x + b.w / 2} y={b.s ? b.y + 22 : b.y + 30} class="t">{b.t}</text>
+        {b.s && <text x={b.x + b.w / 2} y={b.y + 38} class="s">{b.s}</text>}
+      </g>
+    ))}
+    <path d="M130,85 H180" class="ln" marker-end="url(#ah)" />
+    <path d="M300,85 H350" class="ln" marker-end="url(#ah)" />
+    <path d="M500,75 L540,35 H570" class="ln" marker-end="url(#ah)" />
+    <path d="M640,60 V80" class="ln" marker-end="url(#ah)" />
+    <path d="M425,110 V170" class="ln" marker-end="url(#ah)" />
+    <path d="M375,220 L310,280" class="ln b" marker-end="url(#ah-b)" />
+    <path d="M475,220 L540,280" class="ln p" marker-end="url(#ah-p)" />
+    <path d="M250,305 H210" class="ln dash" marker-end="url(#ah)" />
+    <text x="155" y="75" class="s">chars</text>
+    <text x="325" y="75" class="s">512 chars</text>
+    <text x="530" y="60" class="s i" text-anchor="end">continuous</text>
+    <text x="448" y="148" class="s i">on Enter</text>
+    <text x="320" y="252" class="s b">toxic</text>
+    <text x="530" y="252" class="s p">clean</text>
+  </svg>
+  <figcaption>{caption}</figcaption>
+</figure>
+
+<style>
+  .diagram svg { width: 100%; height: auto; font-family: var(--mono) }
+  .box { fill: hsl(191 90% 48% / .08); stroke: var(--primary); stroke-width: 1.5 }
+  .strong { fill: hsl(191 90% 48% / .16); stroke-width: 2.2 }
+  .dim { fill: var(--card); stroke: var(--border) }
+  .bad { fill: hsl(4 80% 60% / .1); stroke: hsl(4 80% 62%) }
+  .t { fill: var(--fg); font-size: 13px; font-weight: 500; text-anchor: middle }
+  .s { fill: var(--muted); font-size: 10.5px; text-anchor: middle }
+  .i { font-style: italic }
+  .ln { fill: none; stroke: var(--muted); stroke-width: 1.4 }
+  .dash { stroke-dasharray: 4 3 }
+  .head { fill: var(--muted) }
+  .p { stroke: var(--primary) } text.p, .head.p { fill: var(--primary); stroke: none }
+  .b { stroke: hsl(4 80% 62%) } text.b, .head.b { fill: hsl(4 80% 62%); stroke: none }
+</style>

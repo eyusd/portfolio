@@ -1,0 +1,8 @@
+---
+interface Props { label?: string; variant?: 'insight' | 'quote' }
+const { label, variant = 'insight' } = Astro.props;
+---
+<aside class:list={['callout', variant]} aria-label={label}>
+  {label && <span aria-hidden="true">{label}</span>}
+  <slot />
+</aside>

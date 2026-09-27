@@ -1,0 +1,9 @@
+---
+import emoji from '../data/pixel-emoji.json';
+
+/** An emoji, crunched to 10×10 pixels at build time. Decorative: the text beside it carries the meaning. */
+interface Props { e: string; lead?: boolean }
+const { e, lead } = Astro.props;
+const src = (emoji as Record<string, string>)[e.replace(/️/g, '')];
+---
+{src && <img class:list={['px', { lead }]} src={src} alt="" width={lead ? 15 : 12} height={lead ? 15 : 12} decoding="async" />}

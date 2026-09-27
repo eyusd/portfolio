@@ -1,0 +1,11 @@
+---
+import { t, type Locale } from '../i18n';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+---
+<div class="dino reveal" data-idle={t(locale, 'dinoIdle')} data-run={t(locale, 'dinoRun')} data-over={t(locale, 'dinoOver')}>
+  <button type="button" id="dino-btn" aria-label={t(locale, 'dinoLabel')} aria-describedby="dino-hint">
+    <canvas id="dino" width="1072" height="110" aria-hidden="true"></canvas>
+  </button>
+  <p id="dino-hint" aria-live="polite" set:html={t(locale, 'dinoIdle')} />
+</div>

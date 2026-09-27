@@ -1,13 +1,1 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <style>
-    .bg { fill: #F7F9FB; }
-    .label { fill: #181C24; font-family: "Geist", "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif; font-size: 24px; font-weight: 700; letter-spacing: -1px; }
-    @media (prefers-color-scheme: dark) {
-      .bg { fill: #071618; }
-      .label { fill: #F0F8F9; }
-    }
-  </style>
-  <rect class="bg" width="64" height="64" rx="14"/>
-  <text class="label" x="50%" y="50%" dominant-baseline="central" text-anchor="middle">CC</text>
-</svg>
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><mask id="satori_om-id"><rect x="0" y="0" width="64" height="64" fill="#fff"/></mask><path x="0" y="0" width="64" height="64" fill="#040f11" d="M14,0 h36 a14,14 0 0 1 14,14 v36 a14,14 0 0 1 -14,14 h-36 a14,14 0 0 1 -14,-14 v-36 a14,14 0 0 1 14,-14"/><mask id="satori_om-id-0"><rect x="15" y="17" width="17" height="31" fill="#fff"/></mask><g><path fill="#f7f8f8" d="M23.2 42.4Q20.9 42.4 19.2 41.2Q17.6 40.0 16.7 37.8Q15.9 35.6 15.9 32.5L15.9 32.5Q15.9 29.4 16.7 27.1Q17.6 24.9 19.2 23.7Q20.9 22.5 23.2 22.5L23.2 22.5Q26.0 22.5 27.8 24.3Q29.6 26.1 30.1 29.4L30.1 29.4L26.7 29.6Q26.3 27.5 25.5 26.5Q24.6 25.5 23.2 25.5L23.2 25.5Q22.0 25.5 21.1 26.3Q20.2 27.1 19.8 28.7Q19.3 30.2 19.3 32.5L19.3 32.5Q19.3 34.7 19.8 36.3Q20.2 37.8 21.1 38.6Q22.0 39.4 23.2 39.4L23.2 39.4Q24.6 39.4 25.5 38.4Q26.4 37.3 26.7 35.1L26.7 35.1L30.1 35.3Q29.6 38.7 27.9 40.5Q26.1 42.4 23.2 42.4L23.2 42.4Z "/></g><mask id="satori_om-id-1"><rect x="32" y="17" width="17" height="31" fill="#fff"/></mask><g><path fill="#0cb9e8" d="M40.2 42.4Q37.9 42.4 36.2 41.2Q34.6 40.0 33.7 37.8Q32.9 35.6 32.9 32.5L32.9 32.5Q32.9 29.4 33.7 27.1Q34.6 24.9 36.2 23.7Q37.9 22.5 40.2 22.5L40.2 22.5Q43.0 22.5 44.8 24.3Q46.6 26.1 47.1 29.4L47.1 29.4L43.7 29.6Q43.3 27.5 42.5 26.5Q41.6 25.5 40.2 25.5L40.2 25.5Q39.0 25.5 38.1 26.3Q37.2 27.1 36.8 28.7Q36.3 30.2 36.3 32.5L36.3 32.5Q36.3 34.7 36.8 36.3Q37.2 37.8 38.1 38.6Q39.0 39.4 40.2 39.4L40.2 39.4Q41.6 39.4 42.5 38.4Q43.4 37.3 43.7 35.1L43.7 35.1L47.1 35.3Q46.6 38.7 44.9 40.5Q43.1 42.4 40.2 42.4L40.2 42.4Z "/></g></svg>

@@ -1,0 +1,59 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Px from '../../../components/Px.astro';
+import { langParams, localeMeta, localePath, messages, t, type Locale } from '../../../i18n';
+import { PERSON, SITE } from '../../../data/profile';
+import { articles } from '../../../data/lab';
+import { breadcrumbs, homeCrumb, ids, labCrumb, personNode, websiteNode } from '../../../data/schema';
+
+export const getStaticPaths = langParams;
+const { locale } = Astro.props as { locale: Locale };
+const lab = messages[locale].Lab;
+const list = articles(locale);
+const title = `${lab.title} — ${PERSON.name}`;
+const pageUrl = new URL(localePath(locale, '/lab'), SITE).href;
+const jsonLd = [
+  personNode(locale),
+  websiteNode(locale),
+  {
+    '@type': ['CollectionPage', 'Blog'],
+    '@id': `${pageUrl}#page`,
+    url: pageUrl,
+    name: title,
+    description: lab.description,
+    inLanguage: localeMeta[locale].tag,
+    isPartOf: { '@id': ids.website },
+    author: { '@id': ids.person },
+    blogPost: list.map((a) => ({
+      '@type': 'BlogPosting',
+      headline: a.entry.data.title,
+      description: a.entry.data.description,
+      url: new URL(localePath(locale, `/lab/${a.slug}`), SITE).href,
+      datePublished: a.entry.data.date.toISOString(),
+      inLanguage: localeMeta[a.lang].tag,
+      author: { '@id': ids.person },
+    })),
+  },
+  breadcrumbs(locale, [homeCrumb(locale), labCrumb(locale)]),
+];
+---
+<Base locale={locale} title={title} description={lab.description} path="/lab" ogImage={`/og/${locale}/lab.png`} jsonLd={jsonLd} fx>
+  <main id="content" class="wrap">
+    <section class="hero" aria-labelledby="name">
+      <h1 class="name" id="name">{lab.title}</h1>
+      <p class="tagline" data-scramble>{lab.description}</p>
+    </section>
+    <ol class="list lab-list" reversed aria-label={t(locale, 'allArticles')}>
+      {list.map((a, i) => (
+        <li class="entry reveal" data-delay={i * 90}>
+          <p class="date"><time datetime={a.entry.data.date.toISOString().slice(0, 10)}>{a.entry.data.date.toISOString().slice(0, 10).replace(/-/g, '.')}</time></p>
+          <div>
+            <h2 class="title"><a href={localePath(locale, `/lab/${a.slug}`)} lang={a.lang !== locale ? localeMeta[a.lang].tag : undefined}><Px e={a.entry.data.emoji} lead />{a.entry.data.title} <span class="arrow" aria-hidden="true">→</span></a></h2>
+            <p lang={a.lang !== locale ? localeMeta[a.lang].tag : undefined}>{a.entry.data.description}</p>
+            <ul class="pills">{a.entry.data.tags.map((tag) => <li class="pill">{tag}</li>)}<li class="pill">{a.minutes} {t(locale, 'minRead')}</li></ul>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </main>
+</Base>

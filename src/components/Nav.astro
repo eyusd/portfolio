@@ -1,0 +1,35 @@
+---
+import { locales, localeMeta, localePath, t, type Locale } from '../i18n';
+import { PERSON } from '../data/profile';
+
+interface Props { locale: Locale; path: string; alternates: Locale[] }
+const { locale, path, alternates } = Astro.props;
+const section = path.startsWith('/lab') ? 'lab' : 'portfolio';
+---
+<header class="top" id="top">
+  <div class="bar">
+    <a class="cc" href={localePath(locale)}>C<span>C</span><span class="sr-only"> — {PERSON.name}</span></a>
+    <nav class="tabs" aria-label="Main">
+      <span class="slider" aria-hidden="true"></span>
+      <a href={localePath(locale)} aria-current={section === 'portfolio' ? 'page' : undefined}>{t(locale, 'portfolio')}</a>
+      <a href={localePath(locale, '/lab')} aria-current={section === 'lab' ? 'page' : undefined}>{t(locale, 'lab')}</a>
+    </nav>
+    <div class="ext">
+      <a href={PERSON.github} target="_blank" rel="me noopener">GitHub <span class="arrow" aria-hidden="true">↗</span></a>
+      <a href={PERSON.linkedin} target="_blank" rel="me noopener">LinkedIn <span class="arrow" aria-hidden="true">↗</span></a>
+      <a href={`mailto:${PERSON.email}`}>Email</a>
+      <details class="lang">
+        <summary>{localeMeta[locale].short}<span class="sr-only"> — {t(locale, 'language')}: {localeMeta[locale].name}</span> <span aria-hidden="true">▾</span></summary>
+        <ul>
+          {locales.map((l) => (
+            <li>
+              <a href={localePath(l, alternates.includes(l) ? path : '/')} hreflang={localeMeta[l].tag} lang={localeMeta[l].tag} aria-current={l === locale ? 'true' : undefined} data-astro-prefetch="false">
+                {localeMeta[l].name}<small aria-hidden="true">{l.toUpperCase()}</small>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </details>
+    </div>
+  </div>
+</header>

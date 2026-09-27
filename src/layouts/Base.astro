@@ -1,0 +1,104 @@
+---
+import '../styles/global.css';
+import fontUrl from '../assets/fonts/geist-mono.woff2?url';
+import { locales, localeMeta, localePath, t, defaultLocale, type Locale } from '../i18n';
+import { PERSON, SITE } from '../data/profile';
+import Nav from '../components/Nav.astro';
+
+interface Props {
+  locale: Locale;
+  title: string;
+  description: string;
+  /** Path without the locale prefix, e.g. `/lab/anchor`. */
+  path: string;
+  /** Locales this page exists in (hreflang); defaults to all. */
+  alternates?: Locale[];
+  /** Canonical URL override, for pages whose content lives elsewhere. */
+  canonical?: string;
+  ogImage: string;
+  ogType?: 'website' | 'article' | 'profile';
+  jsonLd?: object[];
+  article?: { published: Date; modified?: Date; tags: string[] };
+  noindex?: boolean;
+  /** Mark the default fixed canvas for the text effects. */
+  fx?: boolean;
+}
+const { locale, title, description, path, alternates = [...locales], canonical, ogImage, ogType = 'website', jsonLd = [], article, noindex, fx } = Astro.props;
+const url = (l: Locale) => new URL(localePath(l, path), SITE).href;
+const canonicalUrl = canonical ?? url(locale);
+const meta = localeMeta[locale];
+const ogUrl = new URL(ogImage, SITE).href;
+---
+<!doctype html>
+<html lang={meta.tag} dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <script is:inline>document.documentElement.classList.add('js')</script>
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+    {!noindex && alternates.map((l) => <link rel="alternate" hreflang={localeMeta[l].tag} href={url(l)} />)}
+    {!noindex && alternates.includes(defaultLocale) && <link rel="alternate" hreflang="x-default" href={url(defaultLocale)} />}
+    <link rel="preload" href={fontUrl} as="font" type="font/woff2" crossorigin />
+    <meta name="theme-color" content="#040f11" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="author" content={PERSON.name} />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="alternate" type="application/rss+xml" title={`${PERSON.name} — ${t(locale, 'lab')}`} href={localePath(locale, '/rss.xml')} />
+    <link rel="alternate" type="text/plain" title="llms.txt" href="/llms.txt" />
+    <slot name="head" />
+
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={PERSON.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogUrl} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={title} />
+    <meta property="og:locale" content={meta.og} />
+    {alternates.filter((l) => l !== locale).map((l) => <meta property="og:locale:alternate" content={localeMeta[l].og} />)}
+    {article && <meta property="article:published_time" content={article.published.toISOString()} />}
+    {article?.modified && <meta property="article:modified_time" content={article.modified.toISOString()} />}
+    {article && <meta property="article:author" content={SITE} />}
+    {article?.tags.map((tag) => <meta property="article:tag" content={tag} />)}
+    {ogType === 'profile' && <meta property="profile:first_name" content="Clément" />}
+    {ogType === 'profile' && <meta property="profile:last_name" content="Chardine" />}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogUrl} />
+
+    {jsonLd.length > 0 && <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd.length === 1 ? jsonLd[0] : { '@context': 'https://schema.org', '@graph': jsonLd })} />}
+  </head>
+  <body>
+    <a class="skip" href="#content">{t(locale, 'skip')}</a>
+    {fx && <canvas id="fx" aria-hidden="true"></canvas>}
+    <Nav locale={locale} path={path} alternates={alternates} />
+    <slot />
+    <footer class="foot">
+      <div class="wrap">
+        <span>© {new Date().getFullYear()} {PERSON.name} · {t(locale, 'footer')}</span>
+        <nav aria-label={t(locale, 'contact')}>
+          <a href={PERSON.github} rel="me noopener" target="_blank">GitHub</a>
+          <a href={PERSON.linkedin} rel="me noopener" target="_blank">LinkedIn</a>
+          <a href={`mailto:${PERSON.email}`}>Email</a>
+          <a href={localePath(locale, '/rss.xml')}>RSS</a>
+        </nav>
+      </div>
+    </footer>
+    <script>
+      import '../scripts/ui';
+      import '../scripts/home';
+    </script>
+  </body>
+</html>

@@ -1,0 +1,93 @@
+---
+import solutions from '../../data/make-10-solutions.json';
+import dataUrl from '../../data/make-10-solutions.json?url';
+import { latex } from '../../scripts/latex';
+import { widgets } from '../../i18n/widgets';
+import { localeFromPath } from '../../data/lab';
+
+const w = widgets[localeFromPath(Astro.url.pathname)];
+const total = solutions.length;
+// the first rows are rendered at build time: readable without JavaScript, and by crawlers
+const first = solutions.slice(0, 12).map((s, i) => [String(i).padStart(4, '0'), latex(s)] as const);
+const fmt = new Intl.NumberFormat('en').format(total);
+---
+<div class="widget m10" data-src={dataUrl} data-showing={w.m10Showing} data-total={total}>
+  <div class="m10-bar">
+    <label for="m10-q">{w.m10Search}</label>
+    <input id="m10-q" type="search" inputmode="numeric" maxlength="4" autocomplete="off" placeholder={w.m10Placeholder} />
+    <p class="m10-count" aria-live="polite">{w.m10Showing.replace('{n}', fmt).replace('{total}', fmt)}</p>
+  </div>
+  <div class="m10-scroll" tabindex="0" role="region" aria-label={w.m10Search}>
+    <ol class="m10-rows">
+      {first.map(([n, html]) => <li><span class="n">{n}</span><span class="x" set:html={html} /></li>)}
+    </ol>
+  </div>
+</div>
+
+<style>
+  .m10-bar { padding: 14px 16px 8px; border-bottom: 1px solid var(--border) }
+  .m10-count { margin: 8px 0 0; font-size: 11.5px; color: var(--muted) }
+  .m10-scroll { position: relative; height: 480px; overflow: auto; overscroll-behavior: contain; border-radius: 0 0 10px 10px }
+  .m10-rows { list-style: none; margin: 0; padding: 0; position: relative }
+  .m10-rows :global(li) { display: flex; align-items: center; gap: 18px; height: 40px; padding: 0 16px; border-bottom: 1px solid hsl(191 45% 14.4% / .5); white-space: nowrap }
+  .m10-rows :global(li:hover) { background: hsl(191 45% 14.4% / .4) }
+  .m10-rows :global(.n) { color: var(--primary); width: 4ch; flex: none; font-weight: 500 }
+  .m10-rows :global(.x) { color: var(--fg); overflow-x: auto }
+  .m10-rows :global(sup), .m10-rows :global(sub) { font-size: .72em; line-height: 0 }
+  .m10-rows :global(.rt) { white-space: nowrap }
+  .m10-rows :global(.rt > sup) { margin-right: -.3em; vertical-align: .7em }
+  .m10-rows :global(.ov) { border-top: 1px solid currentColor; padding: 1px 1px 0 }
+</style>
+
+<script>
+  import { latex } from '../../scripts/latex';
+
+  for (const box of document.querySelectorAll<HTMLElement>('.m10')) {
+    const input = box.querySelector('input')!, scroller = box.querySelector<HTMLElement>('.m10-scroll')!;
+    const list = box.querySelector<HTMLOListElement>('.m10-rows')!, count = box.querySelector('.m10-count')!;
+    const ROW = 40, fmt = new Intl.NumberFormat(document.documentElement.lang);
+    let data: string[] = [], view: number[] = [], loaded: Promise<void> | null = null;
+    const load = () => (loaded ??= fetch(box.dataset.src!).then((r) => r.json()).then((d: string[]) => { data = d; filter(); }));
+    const cache = new Map<number, string>();
+    const html = (i: number) => { let h = cache.get(i); if (h === undefined) { h = latex(data[i]!); cache.set(i, h); } return h; };
+
+    // a small pool of rows, positioned through the CSSOM (inline style attributes would trip the CSP)
+    const pool: HTMLLIElement[] = [];
+    function row(k: number) {
+      let li = pool[k];
+      if (!li) {
+        li = document.createElement('li');
+        li.append(Object.assign(document.createElement('span'), { className: 'n' }), Object.assign(document.createElement('span'), { className: 'x' }));
+        Object.assign(li.style, { position: 'absolute', left: '0', right: '0' });
+        pool[k] = li;
+      }
+      return li;
+    }
+    function render() {
+      const first = Math.max(0, Math.floor(scroller.scrollTop / ROW) - 6), last = Math.min(view.length, first + Math.ceil(scroller.clientHeight / ROW) + 12);
+      list.style.height = `${view.length * ROW}px`;
+      const rows: HTMLLIElement[] = [];
+      for (let k = first; k < last; k++) {
+        const i = view[k]!, li = row(k - first);
+        li.style.top = `${k * ROW}px`;
+        (li.firstChild as HTMLElement).textContent = String(i).padStart(4, '0');
+        (li.lastChild as HTMLElement).innerHTML = html(i);
+        rows.push(li);
+      }
+      list.replaceChildren(...rows);
+    }
+    function filter() {
+      const q = input.value.replace(/\D/g, '');
+      view = [];
+      for (let i = 0; i < data.length; i++) if (!q || String(i).padStart(4, '0').includes(q)) view.push(i);
+      count.textContent = box.dataset.showing!.replace('{n}', fmt.format(view.length)).replace('{total}', fmt.format(data.length));
+      scroller.scrollTop = 0;
+      render();
+    }
+    let raf = 0;
+    scroller.addEventListener('scroll', () => { if (!data.length) void load(); cancelAnimationFrame(raf); raf = requestAnimationFrame(render); }, { passive: true });
+    input.addEventListener('input', () => { if (data.length) filter(); else void load(); });
+    input.addEventListener('focus', () => void load(), { once: true });
+    new IntersectionObserver(([e], io) => { if (e?.isIntersecting) { io.disconnect(); void load(); } }, { rootMargin: '300px' }).observe(box);
+  }
+</script>

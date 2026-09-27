@@ -1,0 +1,8 @@
+---
+import { t, type Locale } from '../i18n';
+
+interface Props { locale: Locale; begin: string; end?: string | undefined }
+const { locale, begin, end } = Astro.props;
+const fmt = (ym: string) => ym.replace('-', '.');
+---
+<p class="date"><time datetime={begin}>{fmt(begin)}</time> — {end ? <time datetime={end}>{fmt(end)}</time> : t(locale, 'now')}</p>
