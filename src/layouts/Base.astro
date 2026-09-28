@@ -87,7 +87,7 @@ const ogUrl = new URL(ogImage, SITE).href;
     <slot />
     <footer class="foot">
       <div class="wrap">
-        <span>© {new Date().getFullYear()} {PERSON.name} · {t(locale, 'footer')}</span>
+        <span>© {new Date().getFullYear()} {PERSON.name}</span>
         <nav aria-label={t(locale, 'contact')}>
           <a href={PERSON.github} rel="me noopener" target="_blank">GitHub</a>
           <a href={PERSON.linkedin} rel="me noopener" target="_blank">LinkedIn</a>

@@ -30,7 +30,7 @@ const ui = {
     dinoLabel: 'A tiny running game. Press space or tap to play.',
     minRead: 'min read', published: 'Published', backToLab: 'Back to the lab', moreExperiments: 'More experiments',
     notFound: 'Nothing here.', notFoundText: 'This page wandered off. The rest of the site is still where you left it.', backHome: 'Back home',
-    footer: 'Made of text in Paris.', rss: 'RSS feed', now: 'now', translationNote: 'This article is available in English only.',
+    rss: 'RSS feed', now: 'now', translationNote: 'This article is available in English only.',
     readArticle: 'Read the article', allArticles: 'All articles',
   },
   fr: {
@@ -40,7 +40,7 @@ const ui = {
     dinoLabel: 'Un petit jeu de course. Appuyez sur espace ou touchez pour jouer.',
     minRead: 'min de lecture', published: 'Publié le', backToLab: 'Retour au lab', moreExperiments: 'Autres expériences',
     notFound: 'Rien ici.', notFoundText: 'Cette page s’est égarée. Le reste du site est toujours là où vous l’avez laissé.', backHome: 'Retour à l’accueil',
-    footer: 'Fait de texte, à Paris.', rss: 'Flux RSS', now: 'auj.', translationNote: 'Cet article n’est disponible qu’en anglais.',
+    rss: 'Flux RSS', now: 'auj.', translationNote: 'Cet article n’est disponible qu’en anglais.',
     readArticle: 'Lire l’article', allArticles: 'Tous les articles',
   },
   de: {
@@ -50,7 +50,7 @@ const ui = {
     dinoLabel: 'Ein kleines Laufspiel. Leertaste drücken oder tippen zum Spielen.',
     minRead: 'Min. Lesezeit', published: 'Veröffentlicht am', backToLab: 'Zurück zum Lab', moreExperiments: 'Weitere Experimente',
     notFound: 'Hier ist nichts.', notFoundText: 'Diese Seite hat sich verlaufen. Der Rest der Website ist noch da, wo du ihn gelassen hast.', backHome: 'Zur Startseite',
-    footer: 'Aus Text gemacht, in Paris.', rss: 'RSS-Feed', now: 'heute', translationNote: 'Dieser Artikel ist nur auf Englisch verfügbar.',
+    rss: 'RSS-Feed', now: 'heute', translationNote: 'Dieser Artikel ist nur auf Englisch verfügbar.',
     readArticle: 'Artikel lesen', allArticles: 'Alle Artikel',
   },
   es: {
@@ -60,7 +60,7 @@ const ui = {
     dinoLabel: 'Un pequeño juego de carrera. Pulsa espacio o toca para jugar.',
     minRead: 'min de lectura', published: 'Publicado el', backToLab: 'Volver al lab', moreExperiments: 'Más experimentos',
     notFound: 'Aquí no hay nada.', notFoundText: 'Esta página se perdió. El resto del sitio sigue donde lo dejaste.', backHome: 'Volver al inicio',
-    footer: 'Hecho de texto, en París.', rss: 'Feed RSS', now: 'hoy', translationNote: 'Este artículo solo está disponible en inglés.',
+    rss: 'Feed RSS', now: 'hoy', translationNote: 'Este artículo solo está disponible en inglés.',
     readArticle: 'Leer el artículo', allArticles: 'Todos los artículos',
   },
   zh: {
@@ -70,7 +70,7 @@ const ui = {
     dinoLabel: '一个小小的跑酷游戏。按空格或轻触开始。',
     minRead: '分钟阅读', published: '发布于', backToLab: '返回实验室', moreExperiments: '更多实验',
     notFound: '这里什么都没有。', notFoundText: '这个页面走丢了。网站的其他部分都还在原处。', backHome: '返回首页',
-    footer: '在巴黎，用文字做成。', rss: 'RSS 订阅', now: '至今', translationNote: '本文仅提供英文版。',
+    rss: 'RSS 订阅', now: '至今', translationNote: '本文仅提供英文版。',
     readArticle: '阅读文章', allArticles: '所有文章',
   },
   ko: {
@@ -80,7 +80,7 @@ const ui = {
     dinoLabel: '작은 달리기 게임. 스페이스를 누르거나 탭해서 플레이하세요.',
     minRead: '분 분량', published: '게시일', backToLab: '랩으로 돌아가기', moreExperiments: '다른 실험들',
     notFound: '여기엔 아무것도 없어요.', notFoundText: '이 페이지는 길을 잃었어요. 사이트의 나머지는 그대로 있습니다.', backHome: '홈으로',
-    footer: '파리에서, 텍스트로 만들었습니다.', rss: 'RSS 피드', now: '현재', translationNote: '이 글은 영어로만 제공됩니다.',
+    rss: 'RSS 피드', now: '현재', translationNote: '이 글은 영어로만 제공됩니다.',
     readArticle: '글 읽기', allArticles: '모든 글',
   },
 } satisfies Record<Locale, Record<string, string>>;

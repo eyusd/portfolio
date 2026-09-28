@@ -84,7 +84,7 @@ function initParticles() {
   slots = about;
   aboutN = about.length;
   const extra = [...document.querySelectorAll('.entry > div')].map((d) => d.textContent ?? '').join(' ').replace(/\s+/g, ' ');
-  const cap = W < 640 ? 1500 : 3200;
+  const cap = W < 640 ? 2200 : 3200;
   const chars: { ch: string; link: boolean; extra: boolean }[] = about.map((c) => ({ ch: c.ch, link: c.link, extra: false }));
   for (const ch of graphemes(extra)) { if (chars.length >= cap) break; if (ch.trim()) chars.push({ ch, link: false, extra: true }); }
   P = chars.map((c) => ({ ...c, x: 0, y: 0, vx: 0, vy: 0, rnd: Math.random(), alpha: 0, hx: 0, hy: 0 }));
@@ -102,7 +102,7 @@ function layoutName() {
   let area = 0;
   for (let py = 0; py < bh; py += 2) for (let px = 0; px < bw; px += 2) if (inside(px, py)) area += 4;
   // one particle per ~10px² of ink, but never fewer than the paragraph needs
-  if (!nameReady) P = P.slice(0, clamp(Math.round(area / 10), aboutN, P.length));
+  if (!nameReady) P = P.slice(0, clamp(Math.round(area / (W < 640 ? 6 : 10)), aboutN, P.length));
   const N = P.length;
   let sp = Math.sqrt(area / N), pts: [number, number][] = [];
   for (let it = 0; it < 14; it++) {
@@ -123,7 +123,7 @@ function layoutName() {
   for (let i = 0; i < aboutN; i++) { const j = Math.floor((i * N) / aboutN); taken[j] = 1; P[i]!.hx = box.left + pts[j]![0]; P[i]!.hy = top + pts[j]![1]; }
   for (let i = aboutN, j = 0; i < N; i++) { while (taken[j]) j++; taken[j] = 1; P[i]!.hx = box.left + pts[j]![0]; P[i]!.hy = top + pts[j]![1]; }
   aboutSize = aboutEl ? parseFloat(getComputedStyle(aboutEl.querySelector('p')!).fontSize) : 15;
-  heroScale = clamp((sp * 1.75) / aboutSize, 0.35, 1.3);
+  heroScale = clamp((sp * (W < 640 ? 1.3 : 1.75)) / aboutSize, 0.3, 1.3);
   if (!nameReady) { // first time: particles appear exactly where the real name is, then the real name steps aside
     for (const p of P) { p.x = p.hx + (Math.random() - 0.5) * 24; p.y = p.hy + (Math.random() - 0.5) * 24; }
     nameReady = true;
@@ -161,7 +161,7 @@ function drawParticles() {
     fctx.globalAlpha = landed ? 1 : p.alpha * (p.extra ? 0.7 : 1);
     const col = p.link && q > 0.5 ? PRIMARY : FG;
     if (landed) blit(fctx, glyph(p.ch, aboutSize, col), slot!.x, slot!.base - sy);
-    else blit(fctx, glyph(p.ch, aboutSize, col), p.x, vy + aboutSize * 0.35, mix(heroScale, 1, q), clamp((tx - p.x) * 0.004, -0.6, 0.6));
+    else blit(fctx, glyph(p.ch, aboutSize, col), p.x, vy + aboutSize * 0.35 * mix(heroScale, 1, q), mix(heroScale, 1, q), clamp((tx - p.x) * 0.004, -0.6, 0.6));
   }
   // until it is complete, the paragraph is drawn here: faint placeholders for the letters still on their way
   if (!poured && aboutN) {
