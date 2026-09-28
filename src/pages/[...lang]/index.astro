@@ -4,7 +4,7 @@ import Label from '../../components/Label.astro';
 import Px from '../../components/Px.astro';
 import When from '../../components/When.astro';
 import Dino from '../../components/Dino.astro';
-import { langParams, localeMeta, t, type Locale } from '../../i18n';
+import { langParams, localeMeta, localePath, t, type Locale } from '../../i18n';
 import { PERSON, SITE, profile } from '../../data/profile';
 import { breadcrumbs, homeCrumb, ids, personNode, websiteNode } from '../../data/schema';
 import logosUrl from '../../assets/logos.png?url';
@@ -16,14 +16,15 @@ const p = profile(locale);
 const tag = localeMeta[locale].tag;
 const title = `${PERSON.name} — ${p.title}`;
 const words = PERSON.name.split(' ');
+const pageUrl = new URL(localePath(locale, '/'), SITE).href;
 
 const jsonLd = [
   personNode(locale),
   websiteNode(locale),
   {
     '@type': 'ProfilePage',
-    '@id': `${new URL(Astro.url.pathname, SITE).href}#page`,
-    url: new URL(Astro.url.pathname, SITE).href,
+    '@id': `${pageUrl}#page`,
+    url: pageUrl,
     name: title,
     description: p.description,
     inLanguage: tag,

@@ -58,7 +58,7 @@ const jsonLd = [
 ---
 <Base
   locale={locale}
-  title={`${d.title} — ${PERSON.name}`}
+  title={d.title.length > 45 ? d.title : `${d.title} — ${PERSON.name}`}
   description={d.description}
   path={path}
   alternates={translations}

@@ -15,9 +15,19 @@
   to = "/:splat"
   status = 301
 [[redirects]]
+  from = "/kr"
+  to = "/ko"
+  status = 301
+[[redirects]]
   from = "/kr/*"
   to = "/ko/:splat"
   status = 301
+
+# The previous site published its sitemap at /sitemap.xml, and search consoles still ask for it there.
+[[redirects]]
+  from = "/sitemap.xml"
+  to = "/sitemap-index.xml"
+  status = 200
 
 # `/fr` and `/lab` are files (fr.html, lab.html) that sit next to folders of the same name: say so explicitly.
 [[redirects]]
@@ -75,6 +85,11 @@
   for = "/og/*"
   [headers.values]
     Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
+
+[[headers]]
+  for = "/manifest.webmanifest"
+  [headers.values]
+    Content-Type = "application/manifest+json"
 
 [[headers]]
   for = "/*.md"
