@@ -13,7 +13,7 @@ page is idle and skipped or frozen under `prefers-reduced-motion`.
 | `pnpm dev` | local dev server |
 | `pnpm build` | type-check, then build to `dist/` |
 | `pnpm preview` | serve `dist/` |
-| `pnpm assets` | rebuild logos, portrait, pixel emojis and icons from `assets-src/` |
+| `pnpm assets [logos portrait emojis icons]` | rebuild those assets (default: all) from `assets-src/` |
 | `python3 scripts/build-fonts.py` | re-subset Geist Mono (needs `fonttools` and `brotli`) |
 
 ## Where things live

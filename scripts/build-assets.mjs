@@ -1,7 +1,7 @@
 // Pre-computes every raster asset the site needs, so the browser only ever downloads
 // tiny, final files. Run after changing a source in assets-src/: `pnpm assets`.
 //
-//   logos     → src/assets/logos.png        one sprite of binary masks (R: raised mark, G: base plate)
+//   logos     → src/assets/logos.webp       one sprite of signed distance fields (R: raised mark, G: whole solid)
 //   portrait  → src/assets/portrait.webp    greyscale + alpha, drawn onto the character grid
 //   emojis    → src/data/pixel-emoji.json   10×10 pixel-art data URIs, from Noto Emoji (Apache-2.0)
 //   icons     → public/favicon.svg, public/*.png, src/assets/lab/anchor-icon.png
@@ -18,22 +18,55 @@ const lum = (r, g, b) => (0.299 * r + 0.587 * g + 0.114 * b) / 255;
 
 // ─── logos ────────────────────────────────────────────────────────────────
 export const LOGO_ORDER = ['eledone', 'sniive', 'cede', 'wandercraft', 'centralesupelec', 'kaist', 'sorbonne', 'prepa'];
-const N = 112, S = 256;
+const N = 96, S = 512, R = 0.2, M = S / 16; // N² distance samples per logo, measured on S² masks, ±R logo half-widths of range
+
+/** Exact Euclidean distance transform (Felzenszwalb & Huttenlocher): distance from each pixel to the nearest set one. */
+function edt(mask, n) {
+  const INF = 1e12, f = new Float64Array(n * n), v = new Int32Array(n), z = new Float64Array(n + 1), tmp = new Float64Array(n);
+  for (let i = 0; i < n * n; i++) f[i] = mask[i] ? 0 : INF;
+  const pass = (get, set) => {
+    for (let q = 0; q < n; q++) tmp[q] = get(q);
+    let k = 0; v[0] = 0; z[0] = -INF; z[1] = INF;
+    for (let q = 1; q < n; q++) {
+      let s;
+      while ((s = (tmp[q] + q * q - (tmp[v[k]] + v[k] * v[k])) / (2 * q - 2 * v[k])) <= z[k]) k--;
+      k++; v[k] = q; z[k] = s; z[k + 1] = INF;
+    }
+    k = 0;
+    for (let q = 0; q < n; q++) { while (z[k + 1] < q) k++; set(q, (q - v[k]) ** 2 + tmp[v[k]]); }
+  };
+  for (let x = 0; x < n; x++) pass((q) => f[q * n + x], (q, val) => { f[q * n + x] = val; });
+  for (let y = 0; y < n; y++) pass((q) => f[y * n + q], (q, val) => { f[y * n + q] = val; });
+  return f.map(Math.sqrt);
+}
+/** Signed distance in pixels, positive outside. */
+function sdf(mask, n) {
+  const dOut = edt(mask, n), dIn = edt(mask.map((m) => 1 - m), n), out = new Float32Array(n * n);
+  for (let i = 0; i < n * n; i++) out[i] = dOut[i] - dIn[i] + (mask[i] ? 0.5 : -0.5);
+  return out;
+}
+/** Bilinear read, extended past the edges by the distance to them (always outside there). */
+function bilinear(f, n, x, y) {
+  const cx = Math.min(Math.max(x, 0), n - 1.001), cy = Math.min(Math.max(y, 0), n - 1.001), i = cx | 0, j = cy | 0, fx = cx - i, fy = cy - j;
+  const top = f[j * n + i] * (1 - fx) + f[j * n + i + 1] * fx, bot = f[(j + 1) * n + i] * (1 - fx) + f[(j + 1) * n + i + 1] * fx;
+  return top * (1 - fy) + bot * fy + Math.hypot(x - cx, y - cy);
+}
 
 // Per logo: which pixels are raised (a) and which form the base plate (b).
-// `e` is true when the pixel sits between two plate pixels on its row, `u`/`v` are its position in [0, 1].
+// `e` is true when the pixel sits between two plate pixels on its row, `u`/`v` are its position in the source, in [0, 1].
 const LOGOS = {
   eledone: { a: (r, g, b, al) => al > 128 && lum(r, g, b) < 0.4, b: (r, g, b, al) => al > 128 },
   sniive: { a: (r, g, b, al, e) => e && (al < 128 || lum(r, g, b) > 0.85), b: (r, g, b, al) => al > 128 && b > r + 60 },
-  cede: { a: (r, g, b, al, e) => al > 128 && lum(r, g, b) > 0.6 && e, b: (r, g, b, al) => al > 128 && lum(r, g, b) < 0.3 },
+  // the panda and its frame, without the dark tile behind them
+  cede: { a: (r, g, b, al, e) => al > 128 && lum(r, g, b) > 0.6 && e, enc: (r, g, b) => lum(r, g, b) < 0.3 },
   wandercraft: { a: (r, g, b, al) => al > 128 && lum(r, g, b) < 0.6 },
   // both halves of the "S": the mauve C and the crimson hook, not the wordmark
   centralesupelec: { svg: true, a: (r, g, b, al) => al > 128 && Math.max(r, g, b) - Math.min(r, g, b) > 22 && lum(r, g, b) < 0.9 },
   // just the wordmark, without the seal
-  kaist: { a: (r, g, b, al, e, u, v) => al > 128 && b > r + 40 && lum(r, g, b) < 0.85 && u > 0.17 && u < 0.83 && v > 0.3 && v < 0.53, pad: 1.02 },
+  kaist: { a: (r, g, b, al, e, u, v) => al > 128 && b > r + 40 && lum(r, g, b) < 0.85 && u > 0.17 && u < 0.83 && v > 0.3 && v < 0.515, pad: 1.02 },
   sorbonne: { text: 'S', a: (r, g, b, al) => al > 128 },
   // the white chapel at the foot of the Lycée Corneille tablet
-  prepa: { a: (r, g, b, al, e, u, v) => e && lum(r, g, b) > 0.55 && v > 0.56 && v < 0.925, enc: (r, g, b) => r > 120 && r > g + 40, pad: 1.05 },
+  prepa: { a: (r, g, b, al, e, u, v) => e && lum(r, g, b) > 0.55 && u > 0.25 && u < 0.75 && v > 0.56 && v < 0.925, enc: (r, g, b) => r > 120 && r > g + 40, pad: 1.05 },
 };
 
 async function logoPixels(key, spec) {
@@ -43,8 +76,10 @@ async function logoPixels(key, spec) {
       <text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" font-size="230" font-weight="700"
         font-family="Iowan Old Style, Palatino, Georgia, serif" fill="#fff">${spec.text}</text></svg>`);
   } else input = await fs.readFile(src('logos', `${key}.${spec.svg ? 'svg' : 'png'}`));
+  // an empty margin of M all round: a logo that runs to the edge of its file must still end there, not beyond
+  const clear = { r: 0, g: 0, b: 0, alpha: 0 };
   const { data } = await sharp(input, { density: 300 })
-    .resize(S, S, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
+    .resize(S - 2 * M, S - 2 * M, { fit: 'contain', background: clear }).extend({ top: M, bottom: M, left: M, right: M, background: clear })
     .ensureAlpha().raw().toBuffer({ resolveWithObject: true });
   return data;
 }
@@ -59,24 +94,23 @@ async function logoMask(key) {
   }
   let x0 = S, y0 = S, x1 = 0, y1 = 0;
   for (let y = 0; y < S; y++) for (let x = 0; x < S; x++) {
-    const i = (y * S + x) * 4, e = x > rowMin[y] && x < rowMax[y], args = [px[i], px[i + 1], px[i + 2], px[i + 3], e, x / S, y / S];
+    const i = (y * S + x) * 4, e = x > rowMin[y] && x < rowMax[y], args = [px[i], px[i + 1], px[i + 2], px[i + 3], e, (x - M) / (S - 2 * M), (y - M) / (S - 2 * M)];
     const a = !!spec.a(...args), b = spec.b ? !!spec.b(...args) : false;
     A[y * S + x] = a; B[y * S + x] = b || a;
     if (a || b) { x0 = Math.min(x0, x); y0 = Math.min(y0, y); x1 = Math.max(x1, x); y1 = Math.max(y1, y); }
   }
-  // crop to the mark, square it up, resample
+  // crop to the mark and square it up; distances are measured at full resolution, then sampled in logo units
+  // (the square spans -1..1), so edges keep their sub-pixel position however small the stored field is
   const side = Math.max(x1 - x0, y1 - y0) * (spec.pad || 1.12), cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
-  const res = Buffer.alloc(N * N * 3);
   let plate = false;
+  for (let k = 0; k < S * S; k++) if (B[k] && !A[k]) { plate = true; break; }
+  const dA = sdf(A, S), dB = plate ? sdf(B, S) : null, res = Buffer.alloc(N * N * 3);
+  const byte = (d) => Math.round(Math.min(Math.max(0.5 + d / (side / 2) / (2 * R), 0), 1) * 255);
   for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
-    const sx = Math.round(cx + (i / (N - 1) - 0.5) * side), sy = Math.round(cy + (j / (N - 1) - 0.5) * side);
-    if (sx < 0 || sy < 0 || sx >= S || sy >= S) continue;
-    const a = A[sy * S + sx], b = B[sy * S + sx];
-    res[(j * N + i) * 3] = a ? 255 : 0;
-    res[(j * N + i) * 3 + 1] = b ? 255 : 0;
-    if (b && !a) plate = true;
+    const sx = cx + (i / (N - 1) - 0.5) * side, sy = cy + (j / (N - 1) - 0.5) * side;
+    res[(j * N + i) * 3] = byte(bilinear(dA, S, sx, sy));
+    res[(j * N + i) * 3 + 1] = dB ? byte(bilinear(dB, S, sx, sy)) : 255; // no plate: G is outside everywhere
   }
-  if (!plate) for (let k = 0; k < N * N; k++) res[k * 3 + 1] = 0; // no plate: an empty G channel says so
   return res;
 }
 
@@ -87,11 +121,26 @@ async function logos() {
     for (let y = 0; y < N; y++) m.copy(sprite, (y * N * LOGO_ORDER.length + k * N) * 3, y * N * 3, (y + 1) * N * 3);
   }
   await sharp(sprite, { raw: { width: N * LOGO_ORDER.length, height: N, channels: 3 } })
-    .png({ compressionLevel: 9, palette: true, colors: 4 }).toFile(out('src/assets/logos.png'));
+    .webp({ lossless: true, effort: 6 }).toFile(out('src/assets/logos.webp'));
 }
 
 async function portrait() {
-  await sharp(src('portrait.png')).webp({ quality: 82, alphaQuality: 90, effort: 6 }).toFile(out('src/assets/portrait.webp'));
+  // the window samples it at about one pixel per screen pixel: 320 wide is plenty
+  const W = 320, img = () => sharp(src('portrait.png')).resize(W);
+  const { data: grey, info } = await img().greyscale().normalise().raw().toBuffer({ resolveWithObject: true }); // one channel: the alpha is dropped
+  const { data: alpha } = await img().extractChannel('alpha').raw().toBuffer({ resolveWithObject: true });
+  const data = Buffer.alloc(W * info.height * 2);
+  for (let k = 0; k < W * info.height; k++) { data[k * 2] = grey[k]; data[k * 2 + 1] = alpha[k]; }
+  // the face alone gets its own tone curve: its skin is lit to near-white, which a grid of characters draws as one
+  // flat block. Highlights come down and the midtones spread, inside a soft oval (centre and radii in 0..1 of the width)
+  const [fx, fy, rx, ry] = [0.285, 0.29, 0.2, 0.27].map((v) => v * W);
+  for (let y = 0; y < info.height; y++) for (let x = 0; x < W; x++) {
+    const i = (y * W + x) * 2, r = Math.hypot((x - fx) / rx, (y - fy) / ry), w = Math.min(1, Math.max(0, (1.25 - r) / 0.35));
+    if (!w) continue;
+    const v = data[i] / 255, t = 0.8 * v ** 1.5;
+    data[i] = Math.round((v + (t - v) * w) * 255);
+  }
+  await sharp(data, { raw: { width: W, height: info.height, channels: 2 } }).webp({ quality: 75, alphaQuality: 80, effort: 6 }).toFile(out('src/assets/portrait.webp'));
 }
 
 // ─── pixel emojis ─────────────────────────────────────────────────────────
@@ -164,5 +213,7 @@ async function icons() {
 }
 
 await fs.mkdir(out('src/assets'), { recursive: true });
-await Promise.all([logos(), portrait(), emojis(), icons()]);
+// `pnpm assets logos` rebuilds just the named steps
+const steps = { logos, portrait, emojis, icons }, only = process.argv.slice(2);
+await Promise.all(Object.entries(steps).filter(([k]) => !only.length || only.includes(k)).map(([, f]) => f()));
 console.log('assets built');

@@ -54,7 +54,7 @@ const io = new IntersectionObserver((entries) => {
     const el = e.target as HTMLElement, d = Number(el.dataset.delay) || 0;
     io.unobserve(el);
     setTimeout(() => el.classList.add('in'), d);
-    if (!el.classList.contains('label') && !el.classList.contains('dino')) scramble(el.matches('.entry') ? el.querySelector('.title')!.parentElement! : el, { delay: d });
+    if (!el.classList.contains('label') && !el.classList.contains('dino')) scramble(el.matches('.entry') ? el.querySelector('.title') ?? el : el, { delay: d }); // titles only: rewriting whole entries would re-lay them out every frame
   }
 }, { rootMargin: '0px 0px -8% 0px' });
 document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
