@@ -5,3 +5,6 @@ dist/
 .DS_Store
 .env*
 *.tsbuildinfo
+
+# private interview material for the site rewrite (see .claude/skills/interview)
+/interview/
